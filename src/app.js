@@ -341,23 +341,44 @@ function proposalHearts(count = 42) {
 }
 
 async function acceptProposal() {
-  localStorage.setItem('myLoveProposalAcceptedAt', new Date().toISOString());
+  const acceptedBefore = Boolean(localStorage.getItem('myLoveProposalAcceptedAt'));
+
+  if (!acceptedBefore) {
+    localStorage.setItem('myLoveProposalAcceptedAt', new Date().toISOString());
+  }
+
   proposalHearts(70);
   confetti(45);
   showProposalStep('proposalAcceptedStep');
-  toast('Nova fase desbloqueada: namoro ♥', 4200);
+  toast(
+    acceptedBefore
+      ? 'A surpresa foi reproduzida novamente â™¥'
+      : 'Nova fase desbloqueada: namoro â™¥',
+    4200
+  );
+
+  // Rever a surpresa nÃ£o deve criar mensagens ou memÃ³rias repetidas.
+  if (acceptedBefore) return;
 
   try {
     if (store.state.user && store.state.couple) {
-      await store.sendMessage('💍 SIM! A surpresa foi aceita. Adriel e Maria desbloquearam uma nova fase da história! ♥');
+      await store.sendMessage(
+        'ðŸ’ SIM! A surpresa foi aceita. Adriel e Maria desbloquearam uma nova fase da histÃ³ria! â™¥'
+      );
+
       await store.addMemory({
-        title: 'O nosso SIM 💍',
-        content: 'O dia em que uma pergunta especial virou uma nova fase da nossa história.'
+        title: 'O nosso SIM ðŸ’',
+        content: 'O dia em que uma pergunta especial virou uma nova fase da nossa histÃ³ria.'
       });
+
       render();
     }
-  } catch (error) {
-    console.warn('A resposta foi salva localmente, mas não foi possível sincronizar agora:', error);
+  }
+  catch (error) {
+    console.warn(
+      'A resposta foi salva localmente, mas nÃ£o foi possÃ­vel sincronizar agora:',
+      error
+    );
   }
 }
 
@@ -586,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = document.getElementById('pwa-install-title');
         const desc = document.getElementById('pwa-install-desc');
         if (title) title.innerText = 'Instale no seu iPhone';
-        if (desc) desc.innerHTML = '1. Toque no bot�o Compartilhar.<br>2. Escolha "Adicionar � Tela de In�cio".<br>3. Confirme em "Adicionar".';
+        if (desc) desc.innerHTML = '1. Toque no bot�o Compartilhar.<br>2. Escolha "Adicionar � Tela de In�cio".<br>3. Confirme em "Adicionar".';
       }
       hideInstallPromotion();
     });
@@ -612,7 +633,7 @@ if ('serviceWorker' in navigator) {
       const newWorker = reg.installing;
       newWorker.addEventListener('statechange', () => {
         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          if (confirm('Uma nova vers�o est� dispon�vel. Atualizar agora?')) {
+          if (confirm('Uma nova vers�o est� dispon�vel. Atualizar agora?')) {
             newWorker.postMessage({ type: 'SKIP_WAITING' });
             window.location.reload();
           }

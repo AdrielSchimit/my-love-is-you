@@ -745,3 +745,30 @@ body.proposal-mode #pageContainer { min-height:100dvh; }
     height: 78px !important;
   }
 }
+
+/* ===== BaÃº: arte oficial do nosso SIM ===== */
+
+.memory-card {
+  overflow: hidden;
+}
+
+.memory-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  padding: 8px;
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(255, 210, 230, .34),
+      transparent 48%
+    ),
+    linear-gradient(145deg, #fffaf7, #f7e6ef);
+}
+
+.memory-card h3 {
+  margin-top: 0;
+}
