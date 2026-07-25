@@ -22,12 +22,19 @@
     const originalGroup = select.querySelector('optgroup:first-of-type');
     const animeGroup = select.querySelector('optgroup:nth-of-type(2)');
 
-    if (originalGroup) originalGroup.label = 'Temas originais';
-    if (animeGroup) animeGroup.label = 'Universos de anime';
+    if (originalGroup && originalGroup.label !== 'Temas originais') {
+      originalGroup.label = 'Temas originais';
+    }
+
+    if (animeGroup && animeGroup.label !== 'Universos de anime') {
+      animeGroup.label = 'Universos de anime';
+    }
 
     for (const option of select.options) {
       const label = LABELS[option.value];
-      if (label) option.textContent = label;
+      if (label && option.textContent !== label) {
+        option.textContent = label;
+      }
     }
 
     return select;
@@ -52,20 +59,13 @@
 
     select.addEventListener('change', event => {
       syncOriginalTheme(event.target.value);
-      window.requestAnimationFrame(repairThemeLabels);
+      repairThemeLabels();
     });
 
     window.addEventListener('my-love-theme-applied', event => {
       const key = event.detail?.key || select.value;
       syncOriginalTheme(key);
       repairThemeLabels();
-    });
-
-    const observer = new MutationObserver(() => repairThemeLabels());
-    observer.observe(select, {
-      childList: true,
-      subtree: true,
-      characterData: true
     });
   }
 

@@ -35,7 +35,7 @@ window.__MYLOVE_CONFIG__ = {
   if (!document.querySelector('link[data-theme-hotfix]')) {
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = '/theme-hotfix.css?v=2';
+    style.href = '/theme-hotfix.css?v=3';
     style.dataset.themeHotfix = 'true';
     document.head.appendChild(style);
   }
@@ -43,7 +43,7 @@ window.__MYLOVE_CONFIG__ = {
   if (!document.querySelector('script[data-theme-hotfix]')) {
     const script = document.createElement('script');
     script.type = 'module';
-    script.src = '/src/theme-hotfix.js?v=2';
+    script.src = '/src/theme-hotfix.js?v=3';
     script.dataset.themeHotfix = 'true';
     document.head.appendChild(script);
   }
