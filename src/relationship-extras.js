@@ -408,23 +408,6 @@
       'change',
       event => setMusicVolume(Number(event.target.value), true)
     );
-
-    document.addEventListener(
-      'click',
-      event => {
-        const protectedProposalAction = event.target.closest(
-          '#proposalContinueBtn, #proposalReceiveBtn, '
-          + '#proposalYesBtn, #proposalNoBtn'
-        );
-
-        if (!protectedProposalAction || !proposalLocked) return;
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        showAcceptedProposal();
-      },
-      true
-    );
   }
 
   function showAcceptedProposal() {
@@ -478,21 +461,17 @@
       giftButton.setAttribute(
         'aria-label',
         proposalLocked
-          ? 'Pedido aceito — ver lembrança'
+          ? 'Pedido aceito — rever surpresa'
           : 'Abrir surpresa especial'
       );
 
       giftButton.title = proposalLocked
-        ? 'Pedido aceito ♥'
+        ? 'Rever nosso pedido ♥'
         : 'Surpresa especial';
     }
 
-    if (
-      proposalLocked
-      && $('.page[data-page="proposal"].active')
-    ) {
-      showAcceptedProposal();
-    }
+    // O marco aceito impede duplicações, mas não impede a reprise.
+    // A apresentação sempre pode começar pela carta novamente.
   }
 
   async function loadProposalState() {
@@ -1262,6 +1241,26 @@
       },
       showFinal() {
         showAcceptedProposal();
+      },
+      startReplay() {
+        document.body.dataset.proposalReplay =
+          proposalLocked ? 'true' : 'false';
+
+        const kicker = $('.proposal-kicker');
+        if (kicker) {
+          kicker.textContent = proposalLocked
+            ? '♥ Relembrar nosso pedido ♥'
+            : '♥ Surpresa especial ♥';
+        }
+
+        $$('.proposal-step').forEach(step => {
+          step.classList.toggle(
+            'active',
+            step.id === 'proposalLetterStep'
+          );
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
 

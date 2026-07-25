@@ -362,8 +362,13 @@ function proposalHearts(count = 42) {
 }
 
 async function acceptProposal() {
+  const acceptedBeforeShared = Boolean(
+    window.MyLoveProposalLock?.isLocked?.()
+  );
+
   const acceptedBefore = Boolean(
-    localStorage.getItem('myLoveProposalAcceptedAt')
+    acceptedBeforeShared
+    || localStorage.getItem('myLoveProposalAcceptedAt')
   );
 
   if (!acceptedBefore) {
@@ -375,13 +380,17 @@ async function acceptProposal() {
 
   await window.MyLoveProposalLock?.markAccepted?.();
 
+  if (!acceptedBefore) {
+    await window.MyLoveProposalLock?.markAccepted?.();
+  }
+
   proposalHearts(70);
   confetti(45);
   showProposalStep('proposalAcceptedStep');
 
   toast(
     acceptedBefore
-      ? 'A surpresa foi reproduzida novamente \u2665'
+      ? 'Nosso pedido foi revivido mais uma vez \u2665'
       : 'Nova fase desbloqueada: namoro \u2665',
     4200
   );
