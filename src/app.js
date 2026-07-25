@@ -306,13 +306,8 @@ function setPage(page) {
   $$('.nav-item').forEach(button => button.classList.toggle('active', button.dataset.pageTarget === page));
   document.body.classList.toggle('proposal-mode', page === 'proposal');
   if (page === 'proposal') {
-    if (window.MyLoveProposalLock?.isLocked?.()) {
-      showProposalStep('proposalAcceptedStep');
-      window.MyLoveProposalLock.showFinal?.();
-    }
-    else {
-      resetProposal();
-    }
+    resetProposal();
+    window.MyLoveProposalLock?.startReplay?.();
   }
   if (page === 'messages') nanaSay('messages');
   if (page === 'memories') nanaSay('memories');
@@ -328,15 +323,10 @@ function showProposalStep(stepId) {
 
 function resetProposal() {
   proposalNoAttempts = 0;
-  showProposalStep(
-    (
-      window.MyLoveProposalLock?.isLocked?.()
-      || localStorage.getItem('myLoveProposalAcceptedAt')
-    )
-      ? 'proposalAcceptedStep'
-      : 'proposalLetterStep'
-  );
+  showProposalStep('proposalLetterStep');
+
   const noButton = $('#proposalNoBtn');
+
   if (noButton) {
     noButton.style.left = '';
     noButton.style.top = '';
@@ -362,26 +352,29 @@ function proposalHearts(count = 42) {
 }
 
 async function acceptProposal() {
-  const acceptedBeforeShared = Boolean(
-    window.MyLoveProposalLock?.isLocked?.()
-  );
-
   const acceptedBefore = Boolean(
-    acceptedBeforeShared
+    window.MyLoveProposalLock?.isLocked?.()
     || localStorage.getItem('myLoveProposalAcceptedAt')
   );
 
   if (!acceptedBefore) {
+    const acceptedAt = new Date().toISOString();
+
     localStorage.setItem(
       'myLoveProposalAcceptedAt',
-      new Date().toISOString()
+      acceptedAt
     );
-  }
 
-  await window.MyLoveProposalLock?.markAccepted?.();
-
-  if (!acceptedBefore) {
-    await window.MyLoveProposalLock?.markAccepted?.();
+    try {
+      await window.MyLoveProposalLock?.markAccepted?.();
+    }
+    catch (error) {
+      console.warn(
+        'O pedido foi aceito localmente, mas o marco compartilhado '
+        + 'nao sincronizou agora:',
+        error
+      );
+    }
   }
 
   proposalHearts(70);
@@ -395,7 +388,7 @@ async function acceptProposal() {
     4200
   );
 
-  // Rever a surpresa nao cria mensagens ou memorias repetidas.
+  // A reprise executa toda a animacao, mas nao repete registros.
   if (acceptedBefore) return;
 
   try {
@@ -418,8 +411,8 @@ async function acceptProposal() {
   }
   catch (error) {
     console.warn(
-      'A resposta foi salva localmente, mas nao foi possivel '
-      + 'sincronizar agora:',
+      'A celebracao foi exibida, mas nao foi possivel '
+      + 'sincronizar o registro agora:',
       error
     );
   }

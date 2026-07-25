@@ -1,0 +1,222 @@
+/* =========================================================
+   V20 — MINI-PLAYER, REPLAY REAL E CONTROLE DO BAÚ
+   ========================================================= */
+
+.chest-management-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 11px 0;
+  padding: 11px 12px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      transparent 48%
+    );
+  border-radius: 15px;
+  color: var(--anime-ink, #51384d);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--anime-card, #fff8f5),
+        white 9%
+      ),
+      color-mix(
+        in srgb,
+        var(--anime-card-2, #ffe7ef),
+        var(--anime-accent, #ef5d91) 5%
+      )
+    );
+}
+
+.chest-management-bar div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.chest-management-bar strong {
+  font-size: 12px;
+}
+
+.chest-management-bar small {
+  color: var(--anime-muted, #765e75);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.chest-management-bar button {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  color: #9b345c;
+  border-color: rgba(190, 72, 119, .35);
+  background: rgba(255, 226, 236, .88);
+  font-size: 10px;
+}
+
+.memory-card,
+.drawing-card {
+  position: relative;
+}
+
+.chest-delete-button {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 5;
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.85);
+  border-radius: 50%;
+  color: #a13b62;
+  background: rgba(255, 244, 248, .92);
+  box-shadow: 0 6px 13px rgba(48, 15, 40, .22);
+  font-size: 13px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chest-delete-button:active {
+  transform: scale(.92);
+}
+
+/* Player expandido continua disponível, mas qualquer toque fora
+   minimiza sem pausar. */
+
+.love-music-player-panel {
+  max-width: calc(100vw - 18px);
+}
+
+.love-music-player-panel.music-minimized {
+  top: 82px !important;
+  right: 8px !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 208px !important;
+  height: 208px !important;
+  padding: 4px !important;
+  border-radius: 18px !important;
+  opacity: 1 !important;
+  transform: none !important;
+  overflow: visible !important;
+  box-shadow: 0 16px 38px rgba(13, 5, 22, .42) !important;
+}
+
+.love-music-player-panel.music-minimized[data-corner="left"] {
+  right: auto !important;
+  left: 8px !important;
+}
+
+.love-music-player-panel.music-minimized > header,
+.love-music-player-panel.music-minimized
+.love-music-panel-controls {
+  display: none !important;
+}
+
+.love-music-player-panel.music-minimized
+#loveMusicYoutubePlayer,
+.love-music-player-panel.music-minimized
+#loveMusicYoutubePlayer iframe {
+  width: 200px !important;
+  height: 200px !important;
+  border-radius: 14px !important;
+}
+
+.music-mini-action {
+  display: none;
+}
+
+.love-music-player-panel.music-minimized
+.music-mini-action {
+  position: absolute;
+  z-index: 8;
+  top: -13px;
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  background:
+    linear-gradient(
+      145deg,
+      var(--anime-accent-2, #c995e3),
+      var(--anime-accent, #ef5d91)
+    );
+  box-shadow: 0 6px 13px rgba(26, 8, 29, .28);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.love-music-player-panel.music-minimized
+.music-mini-expand {
+  right: 4px;
+}
+
+.love-music-player-panel.music-minimized
+.music-mini-move {
+  right: 41px;
+}
+
+body.proposal-mode .love-music-player-panel {
+  display: none !important;
+}
+
+/* O replay do pedido sempre começa do primeiro passo. */
+body[data-proposal-replay="true"] .proposal-kicker {
+  white-space: normal;
+  text-align: center;
+}
+
+@media (max-width: 620px) {
+  .chest-management-bar {
+    align-items: flex-start;
+  }
+
+  .love-music-player-panel:not(.music-minimized) {
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) scale(.94) !important;
+  }
+
+  .love-music-player-panel:not(.music-minimized).open {
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  .love-music-player-panel.music-minimized {
+    top: 76px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .chest-management-bar {
+    display: grid;
+  }
+
+  .chest-management-bar button {
+    width: 100%;
+  }
+
+  .love-music-player-panel.music-minimized {
+    top: 71px !important;
+    width: 208px !important;
+    height: 208px !important;
+  }
+
+  .love-music-player-panel.music-minimized
+  #loveMusicYoutubePlayer,
+  .love-music-player-panel.music-minimized
+  #loveMusicYoutubePlayer iframe {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
