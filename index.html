@@ -17,6 +17,7 @@
   <meta name="color-scheme" content="dark" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="/cinema.css" />
+  <link rel="stylesheet" href="/themes.css" />
   <title>My love is You</title>
 </head>
 <body>
@@ -267,7 +268,22 @@
           <section class="soft-card settings-list">
             <label>Data do próximo encontro <input id="meetingDateInput" type="date" /></label>
             <label>Nome do gato <input id="petNameInput" maxlength="30" value="Mochi" /></label>
-            <label>Tema <select id="themeSelect"><option value="sakura">Sakura noturna</option><option value="cyber">Romance cyber</option><option value="cream">Café aconchegante</option></select></label>
+            <label>Tema
+  <select id="themeSelect">
+    <optgroup label="Temas originais">
+      <option value="sakura">Sakura noturna</option>
+      <option value="cyber">Romance cyber</option>
+      <option value="cream">CafÃ© aconchegante</option>
+    </optgroup>
+    <optgroup label="Universos de anime">
+      <option value="hunter">Hunter â€” ExpediÃ§Ã£o</option>
+      <option value="bleach">Bleach â€” Noite espiritual</option>
+      <option value="fullmetal">Fullmetal â€” Oficina alquÃ­mica</option>
+      <option value="one-piece">One Piece â€” Rota pirata</option>
+      <option value="blue-lock">Blue Lock â€” Arena</option>
+    </optgroup>
+  </select>
+</label>
             <button class="secondary-button" id="notificationBtn">Ativar notificações do navegador</button>
           </section>
           <section class="soft-card invite-card"><h2>Código do casal</h2><strong id="inviteCode">LOVE-8421</strong><button class="secondary-button" id="copyInviteBtn">Copiar convite</button></section>
@@ -302,6 +318,7 @@
 
   <div id="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
+  <script src="/src/themes.js"></script>
   <script type="module" src="src/app.js"></script>
   <script type="module" src="/src/cinema.js"></script>
 </body>

@@ -185,6 +185,7 @@ function render() {
   document.body.classList.remove('theme-cyber', 'theme-cream');
   if (s.settings.theme === 'cyber') document.body.classList.add('theme-cyber');
   if (s.settings.theme === 'cream') document.body.classList.add('theme-cream');
+  window.MyLoveThemes?.apply(s.settings.theme || 'sakura');
   renderMissions();
   renderMood();
   renderBoss();
