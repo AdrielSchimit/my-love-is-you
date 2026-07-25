@@ -1,0 +1,156 @@
+/* =========================================================
+   V21 — PLAYER MÍNIMO, FECHAR, ARRASTAR E BUSCAR POR NOME
+   ========================================================= */
+
+/*
+  O viewport do player do YouTube permanece em 200 × 200,
+  o menor tamanho permitido. O restante da moldura foi removido.
+*/
+
+.love-music-player-panel.v21-mini-player {
+  position: fixed !important;
+  top: var(--music-player-y, 74px) !important;
+  left: var(--music-player-x, calc(100vw - 212px)) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 204px !important;
+  height: 204px !important;
+  min-width: 204px !important;
+  min-height: 204px !important;
+  max-width: 204px !important;
+  max-height: 204px !important;
+  padding: 2px !important;
+  border-width: 2px !important;
+  border-radius: 16px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.love-music-player-panel.v21-mini-player > header,
+.love-music-player-panel.v21-mini-player
+.love-music-panel-controls,
+.love-music-player-panel.v21-mini-player
+.music-mini-action {
+  display: none !important;
+}
+
+.love-music-player-panel.v21-mini-player
+#loveMusicYoutubePlayer,
+.love-music-player-panel.v21-mini-player
+#loveMusicYoutubePlayer iframe {
+  display: block !important;
+  width: 200px !important;
+  height: 200px !important;
+  min-width: 200px !important;
+  min-height: 200px !important;
+  border-radius: 12px !important;
+  pointer-events: auto;
+}
+
+.v21-player-controls {
+  display: none;
+}
+
+.love-music-player-panel.v21-mini-player
+.v21-player-controls {
+  position: absolute;
+  z-index: 12;
+  top: -18px;
+  right: -6px;
+  left: -6px;
+  height: 38px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.v21-player-button {
+  width: 33px;
+  height: 33px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  background:
+    linear-gradient(
+      145deg,
+      var(--anime-accent-2, #c995e3),
+      var(--anime-accent, #ef5d91)
+    );
+  box-shadow: 0 7px 15px rgba(23, 7, 27, .31);
+  font-size: 14px;
+  font-weight: 950;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.v21-drag-handle {
+  margin-right: auto;
+  cursor: grab;
+  font-size: 17px;
+}
+
+.love-music-player-panel.is-dragging
+.v21-drag-handle {
+  cursor: grabbing;
+  transform: scale(1.08);
+}
+
+.v21-player-close {
+  font-size: 21px;
+  line-height: 1;
+  background:
+    linear-gradient(145deg, #e95b72, #b52c50);
+}
+
+.youtube-name-search {
+  width: 100%;
+  min-height: 43px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.youtube-name-search span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.youtube-name-search-hint {
+  display: block;
+  margin: -3px 0 4px;
+  color: var(--anime-muted, #765e75);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+@media (max-width: 390px) {
+  .love-music-player-panel.v21-mini-player {
+    width: 204px !important;
+    height: 204px !important;
+    min-width: 204px !important;
+    min-height: 204px !important;
+  }
+
+  .love-music-player-panel.v21-mini-player
+  #loveMusicYoutubePlayer,
+  .love-music-player-panel.v21-mini-player
+  #loveMusicYoutubePlayer iframe {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
