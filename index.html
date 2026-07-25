@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="/cinema.css" />
   <link rel="stylesheet" href="/themes.css" />
+  <link rel="stylesheet" href="/profile-theme.css" />
+  <link rel="stylesheet" href="/romance-polish.css" />
   <title>My love is You</title>
 </head>
 <body>
@@ -285,6 +287,12 @@
   </select>
 </label>
             <button class="secondary-button" id="notificationBtn">Ativar notificações do navegador</button>
+            <div class="install-love-control">
+              <strong>Leve nosso universo com voc&ecirc; &hearts;</strong>
+              <small>Instale como aplicativo e abra direto pela tela inicial.</small>
+              <button class="secondary-button" id="btn-show-install-pwa" type="button">Instalar My Love &hearts;</button>
+              <small id="pwa-installed-note" hidden>J&aacute; instalado neste aparelho &hearts;</small>
+            </div>
           </section>
           <section class="soft-card invite-card"><h2>Código do casal</h2><strong id="inviteCode">LOVE-8421</strong><button class="secondary-button" id="copyInviteBtn">Copiar convite</button></section>
           <section class="soft-card status-card"><h2>Status da conexão</h2><p id="connectionStatus">Modo local</p></section>
@@ -316,10 +324,24 @@
 
   <dialog class="modal" id="nanaModal"><form method="dialog" class="modal-card nana-modal-card"><header><h2>Nana</h2><button value="cancel">×</button></header><img id="nanaModalSprite" src="assets/nana/neutral.webp" alt="Nana" /><blockquote id="nanaModalText">Amor também exige constância.</blockquote><div class="nana-topics"><button type="button" data-nana-topic="romantic">Amor</button><button type="button" data-nana-topic="missions">Missões</button><button type="button" data-nana-topic="map">Distância</button><button type="button" data-nana-topic="sad">Dia difícil</button><button type="button" data-nana-topic="night">Boa noite</button></div></form></dialog>
 
+  <div id="pwa-install-modal" class="modal-overlay pwa-install-modal hidden" role="dialog" aria-modal="true" aria-labelledby="pwa-install-title">
+    <section class="modal pwa-install-card">
+      <button class="close-modal" type="button" aria-label="Fechar">&times;</button>
+      <img class="pwa-install-heart" src="assets/heart-main.webp" alt="" />
+      <h2 id="pwa-install-title">Nosso universo, a um toque de dist&acirc;ncia</h2>
+      <p id="pwa-install-desc">Instale o My Love para abrir como um aplicativo, sem precisar procurar no navegador.</p>
+      <div class="pwa-install-actions">
+        <button class="primary-button" id="btn-install-pwa" type="button">Instalar My Love &hearts;</button>
+        <button class="secondary-button" id="btn-cancel-pwa" type="button">Agora n&atilde;o</button>
+      </div>
+    </section>
+  </div>
   <div id="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
   <script src="/src/themes.js"></script>
   <script type="module" src="src/app.js"></script>
+  <script type="module" src="/src/profile-theme.js"></script>
+  <script type="module" src="/src/install-love.js"></script>
   <script type="module" src="/src/couple-tools.js"></script>
   <script type="module" src="/src/cinema.js"></script>
 </body>

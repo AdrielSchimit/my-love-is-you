@@ -178,7 +178,10 @@ function render() {
   $('#profileName').textContent = s.profile?.name || 'Adriel';
   $('#profileEmail').textContent = s.user?.email || 'Modo demonstração';
   $('#profileAvatar').src = (s.profile?.avatarKey || s.profile?.name || '').toLowerCase().includes('maria') ? 'assets/avatar-maria-map.webp' : 'assets/avatar-adriel-map.webp';
-  $('#connectionStatus').textContent = store.isConfigured() && s.mode === 'remote' ? 'Supabase conectado — sincronização em tempo real ativa.' : 'Modo local de demonstração — dados salvos apenas neste aparelho.';
+  $('#connectionStatus').textContent =
+    store.isConfigured() && s.mode === 'remote'
+      ? 'Dois cora\u00E7\u00F5es conectados. Mesmo longe, tudo que voc\u00EAs compartilham encontra o caminho at\u00E9 o outro. \u2665'
+      : 'Este cantinho est\u00E1 guardado neste aparelho, esperando o outro cora\u00E7\u00E3o. \u2665';
   $('#meetingDateInput').value = s.settings.nextMeeting || '';
   $('#calendarDateInput').value = s.settings.nextMeeting || '';
   $('#petNameInput').value = s.pet.name || 'Mochi';
@@ -343,34 +346,44 @@ function proposalHearts(count = 42) {
 }
 
 async function acceptProposal() {
-  const acceptedBefore = Boolean(localStorage.getItem('myLoveProposalAcceptedAt'));
+  const acceptedBefore = Boolean(
+    localStorage.getItem('myLoveProposalAcceptedAt')
+  );
 
   if (!acceptedBefore) {
-    localStorage.setItem('myLoveProposalAcceptedAt', new Date().toISOString());
+    localStorage.setItem(
+      'myLoveProposalAcceptedAt',
+      new Date().toISOString()
+    );
   }
 
   proposalHearts(70);
   confetti(45);
   showProposalStep('proposalAcceptedStep');
+
   toast(
     acceptedBefore
-      ? 'A surpresa foi reproduzida novamente â™¥'
-      : 'Nova fase desbloqueada: namoro â™¥',
+      ? 'A surpresa foi reproduzida novamente \u2665'
+      : 'Nova fase desbloqueada: namoro \u2665',
     4200
   );
 
-  // Rever a surpresa nÃ£o deve criar mensagens ou memÃ³rias repetidas.
+  // Rever a surpresa nao cria mensagens ou memorias repetidas.
   if (acceptedBefore) return;
 
   try {
     if (store.state.user && store.state.couple) {
       await store.sendMessage(
-        'ðŸ’ SIM! A surpresa foi aceita. Adriel e Maria desbloquearam uma nova fase da histÃ³ria! â™¥'
+        '\u{1F48D} SIM! A surpresa foi aceita. '
+        + 'Adriel e Maria desbloquearam uma nova fase da hist\u00F3ria! '
+        + '\u2665'
       );
 
       await store.addMemory({
-        title: 'O nosso SIM ðŸ’',
-        content: 'O dia em que uma pergunta especial virou uma nova fase da nossa histÃ³ria.'
+        title: 'O nosso SIM \u{1F48D}',
+        content:
+          'O dia em que uma pergunta especial virou uma nova fase '
+          + 'da nossa hist\u00F3ria.'
       });
 
       render();
@@ -378,7 +391,8 @@ async function acceptProposal() {
   }
   catch (error) {
     console.warn(
-      'A resposta foi salva localmente, mas nÃ£o foi possÃ­vel sincronizar agora:',
+      'A resposta foi salva localmente, mas nao foi possivel '
+      + 'sincronizar agora:',
       error
     );
   }
@@ -609,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = document.getElementById('pwa-install-title');
         const desc = document.getElementById('pwa-install-desc');
         if (title) title.innerText = 'Instale no seu iPhone';
-        if (desc) desc.innerHTML = '1. Toque no bot�o Compartilhar.<br>2. Escolha "Adicionar � Tela de In�cio".<br>3. Confirme em "Adicionar".';
+        if (desc) desc.innerHTML = '1. Toque no bot\\u00E3o Compartilhar.<br>2. Escolha "Adicionar \\u00E0 Tela de In\\u00EDcio".<br>3. Confirme em "Adicionar".';
       }
       hideInstallPromotion();
     });
@@ -635,7 +649,7 @@ if ('serviceWorker' in navigator) {
       const newWorker = reg.installing;
       newWorker.addEventListener('statechange', () => {
         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          if (confirm('Uma nova vers�o est� dispon�vel. Atualizar agora?')) {
+          if (confirm('Uma nova vers\\u00E3o est\\u00E1 dispon\\u00EDvel. Atualizar agora?')) {
             newWorker.postMessage({ type: 'SKIP_WAITING' });
             window.location.reload();
           }
