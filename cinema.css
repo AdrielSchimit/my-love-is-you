@@ -1,0 +1,485 @@
+/* My love is You — Cineminha sincronizado */
+
+.cinema-launch-card {
+  width: 100%;
+  margin: 12px 0 0;
+  padding: 15px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  border: 2px solid rgba(255, 255, 255, .84);
+  border-radius: 22px;
+  color: #fff8fc;
+  text-align: left;
+  background:
+    radial-gradient(circle at 88% 10%, rgba(255, 115, 173, .38), transparent 32%),
+    linear-gradient(135deg, #3b204c, #75406e 55%, #a64d7a);
+  box-shadow:
+    0 12px 25px rgba(45, 20, 58, .28),
+    inset 0 0 0 1px rgba(248, 179, 220, .28);
+}
+
+.cinema-launch-card strong,
+.cinema-launch-card small {
+  display: block;
+}
+
+.cinema-launch-card strong {
+  font-size: 17px;
+}
+
+.cinema-launch-card small {
+  margin-top: 4px;
+  color: #f2dce9;
+  line-height: 1.35;
+}
+
+.cinema-launch-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  font-size: 28px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .22);
+}
+
+.cinema-live-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #c7aabf;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, .08);
+}
+
+.cinema-live-dot.is-live {
+  background: #ff5a8e;
+  box-shadow: 0 0 0 6px rgba(255, 90, 142, .16), 0 0 18px #ff5a8e;
+  animation: cinemaPulse 1.15s ease-in-out infinite;
+}
+
+.cinema-sync-modal {
+  width: min(680px, calc(100vw - 18px));
+  max-width: 680px;
+  max-height: calc(100dvh - 18px);
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
+  color: #3e2946;
+  background: transparent;
+  overflow: visible;
+}
+
+.cinema-sync-modal::backdrop {
+  background: rgba(15, 5, 23, .82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cinema-sync-shell {
+  max-height: calc(100dvh - 18px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px;
+  border: 2px solid rgba(255, 184, 215, .82);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 0, rgba(248, 178, 222, .42), transparent 35%),
+    linear-gradient(180deg, #fffaf8, #f3e4f5);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
+}
+
+.cinema-sync-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.cinema-sync-header h2 {
+  margin: 2px 0 0;
+  color: #5c3159;
+  font-size: clamp(24px, 7vw, 34px);
+}
+
+.cinema-eyebrow {
+  color: #c64b80;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 1.5px;
+}
+
+.cinema-close-btn {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, #ed729e, #c84179);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.cinema-legal-note {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  color: #715a72;
+  background: rgba(255, 255, 255, .62);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.cinema-empty-state {
+  padding: 28px 18px;
+  display: grid;
+  gap: 8px;
+  text-align: center;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #ebc8dc;
+}
+
+.cinema-room {
+  display: grid;
+  gap: 12px;
+}
+
+.cinema-editor-card,
+.cinema-now-card,
+.cinema-ready-card,
+.cinema-controls-card,
+.cinema-reaction-card {
+  padding: 15px;
+  border: 1px solid #e7c3d9;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 8px 19px rgba(67, 27, 70, .09);
+}
+
+.cinema-editor-card {
+  display: grid;
+  gap: 10px;
+}
+
+.cinema-editor-card label,
+.cinema-position-row label {
+  display: grid;
+  gap: 5px;
+  color: #674c68;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.cinema-editor-card input,
+.cinema-position-row input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 2px solid #e8c5d9;
+  border-radius: 14px;
+  color: #3f2a45;
+  background: #fffafc;
+  outline: none;
+}
+
+.cinema-editor-card input:focus,
+.cinema-position-row input:focus {
+  border-color: #e7679a;
+  box-shadow: 0 0 0 4px rgba(231, 103, 154, .12);
+}
+
+.cinema-editor-card input:disabled {
+  opacity: .72;
+  cursor: not-allowed;
+}
+
+.cinema-primary-btn,
+.cinema-secondary-btn,
+.cinema-ghost-btn,
+.cinema-crunchyroll-btn {
+  min-height: 48px;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-weight: 950;
+}
+
+.cinema-primary-btn {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(145deg, #f479a7, #d84a84);
+  box-shadow: 0 6px 0 #a93264;
+}
+
+.cinema-secondary-btn {
+  border: 1px solid #dcb7e5;
+  color: #674b76;
+  background: #f1e1f8;
+}
+
+.cinema-secondary-btn.is-ready {
+  color: #fff;
+  background: linear-gradient(145deg, #87c95f, #5b9e3d);
+  border-color: #79b950;
+}
+
+.cinema-ghost-btn {
+  border: 1px solid #edc1d1;
+  color: #9a3c64;
+  background: #fff2f6;
+}
+
+.cinema-crunchyroll-btn {
+  width: 100%;
+  border: 0;
+  color: #fff;
+  background: linear-gradient(145deg, #ff8b34, #f45b20);
+  box-shadow: 0 7px 18px rgba(238, 91, 31, .26);
+}
+
+.cinema-now-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 205px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  color: #fff;
+  background:
+    radial-gradient(circle at 50% 25%, rgba(242, 108, 174, .42), transparent 37%),
+    linear-gradient(155deg, #1d1128, #43234e 52%, #752e61);
+  border-color: rgba(255, 203, 229, .46);
+}
+
+.cinema-now-card h3 {
+  margin: 14px 0 3px;
+  font-size: 23px;
+}
+
+.cinema-now-card p {
+  margin: 0;
+  color: #e9d4e5;
+}
+
+.cinema-status-pill {
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #301d39;
+  background: #f5d7e8;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.cinema-status-pill[data-status="playing"] {
+  color: #fff;
+  background: #dc4d84;
+}
+
+.cinema-clock {
+  margin-top: 12px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 44px;
+  font-weight: 950;
+  letter-spacing: 2px;
+}
+
+.cinema-countdown {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(19, 6, 29, .82);
+  font-size: clamp(72px, 24vw, 145px);
+  font-weight: 1000;
+  text-shadow: 0 0 30px #ff77ad;
+  z-index: 4;
+}
+
+.cinema-section-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cinema-section-title span {
+  color: #9f4772;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.cinema-ready-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 11px;
+}
+
+.cinema-ready-person {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #e7cedd;
+  border-radius: 15px;
+  background: #fff9fc;
+}
+
+.cinema-ready-person.is-ready {
+  border-color: #8cc365;
+  background: #f0ffe8;
+}
+
+.cinema-ready-person img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #f3e8f2;
+}
+
+.cinema-ready-person span,
+.cinema-ready-person strong,
+.cinema-ready-person small {
+  min-width: 0;
+  display: block;
+}
+
+.cinema-ready-person small {
+  margin-top: 2px;
+  color: #806b80;
+  font-size: 10px;
+}
+
+.cinema-ready-card > .cinema-secondary-btn {
+  width: 100%;
+}
+
+.cinema-position-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.cinema-host-controls {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.cinema-host-controls .cinema-ghost-btn {
+  grid-column: 1 / -1;
+}
+
+.cinema-guest-help {
+  margin-top: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+  border-radius: 15px;
+  color: #6c526f;
+  background: #f5e9fa;
+}
+
+.cinema-reaction-card strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.cinema-reaction-buttons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.cinema-reaction-buttons button {
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid #edcadb;
+  border-radius: 13px;
+  background: #fff9fc;
+  font-size: 23px;
+}
+
+.cinema-reaction-feed {
+  min-height: 38px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cinema-reaction-feed span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f4e3ed;
+  font-size: 20px;
+}
+
+.cinema-floating-reaction {
+  position: fixed;
+  bottom: 120px;
+  z-index: 500;
+  pointer-events: none;
+  font-size: 40px;
+  animation: cinemaReactionFly 1.7s ease-out forwards;
+}
+
+@keyframes cinemaReactionFly {
+  from { opacity: 0; transform: translateY(20px) scale(.6) rotate(-8deg); }
+  15% { opacity: 1; }
+  to { opacity: 0; transform: translateY(-240px) scale(1.5) rotate(12deg); }
+}
+
+@keyframes cinemaPulse {
+  50% { transform: scale(.76); opacity: .62; }
+}
+
+@media (max-width: 620px) {
+  .cinema-sync-modal {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .cinema-sync-shell {
+    min-height: 100dvh;
+    max-height: 100dvh;
+    padding:
+      max(16px, env(safe-area-inset-top))
+      12px
+      calc(24px + env(safe-area-inset-bottom));
+    border: 0;
+    border-radius: 0;
+  }
+
+  .cinema-host-controls,
+  .cinema-position-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cinema-host-controls .cinema-ghost-btn {
+    grid-column: auto;
+  }
+
+  .cinema-reaction-buttons {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
