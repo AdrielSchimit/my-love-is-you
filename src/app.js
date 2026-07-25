@@ -519,3 +519,106 @@ bindDrawing();
 store.init().then(() => { routeFromState(); setTimeout(() => nanaSay(contextualEntry().topic || 'entry'), 500); });
 
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+
+// PWA Install & Update Logic
+let deferredInstallPrompt = null;
+const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
+                    window.matchMedia('(display-mode: fullscreen)').matches || 
+                    window.navigator.standalone === true;
+
+if (isInstalled) {
+  document.body.classList.add('is-installed');
+}
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  showInstallPromotion();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  hideInstallPromotion();
+  localStorage.setItem('my-love-is-you-installed', 'true');
+});
+
+function isIos() {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  return /iphone|ipad|ipod/.test(userAgent);
+}
+
+function showInstallPromotion() {
+  if (isInstalled || sessionStorage.getItem('pwa-dismissed')) return;
+  const modal = document.getElementById('pwa-install-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    setTimeout(() => modal.classList.add('visible'), 10);
+  }
+}
+
+function hideInstallPromotion() {
+  const modal = document.getElementById('pwa-install-modal');
+  if (modal) {
+    modal.classList.remove('visible');
+    setTimeout(() => modal.classList.add('hidden'), 400);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnShowInstall = document.getElementById('btn-show-install-pwa');
+  if (btnShowInstall && !isInstalled) {
+    btnShowInstall.style.display = 'block';
+    btnShowInstall.addEventListener('click', showInstallPromotion);
+  }
+  const btnInstall = document.getElementById('btn-install-pwa');
+  const btnCancel = document.getElementById('btn-cancel-pwa');
+  const modalClose = document.querySelector('#pwa-install-modal .close-modal');
+  
+  if (btnInstall) {
+    btnInstall.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        if (outcome === 'accepted') {
+          deferredInstallPrompt = null;
+        }
+      } else if (isIos()) {
+        const title = document.getElementById('pwa-install-title');
+        const desc = document.getElementById('pwa-install-desc');
+        if (title) title.innerText = 'Instale no seu iPhone';
+        if (desc) desc.innerHTML = '1. Toque no botão Compartilhar.<br>2. Escolha "Adicionar à Tela de Início".<br>3. Confirme em "Adicionar".';
+      }
+      hideInstallPromotion();
+    });
+  }
+  
+  const cancelAction = () => {
+    sessionStorage.setItem('pwa-dismissed', 'true');
+    hideInstallPromotion();
+  };
+  
+  if (btnCancel) btnCancel.addEventListener('click', cancelAction);
+  if (modalClose) modalClose.addEventListener('click', cancelAction);
+  
+  if (isIos() && !isInstalled && !sessionStorage.getItem('pwa-dismissed')) {
+      showInstallPromotion();
+  }
+});
+
+// Service Worker Registration and Update Notification
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          if (confirm('Uma nova versão está disponível. Atualizar agora?')) {
+            newWorker.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+          }
+        }
+      });
+    });
+  });
+}
+
