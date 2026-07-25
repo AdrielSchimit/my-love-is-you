@@ -30,3 +30,21 @@ window.__MYLOVE_CONFIG__ = {
     document.head.appendChild(script);
   }
 })();
+// my-love-theme-hotfix-loader
+(() => {
+  if (!document.querySelector('link[data-theme-hotfix]')) {
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = '/theme-hotfix.css?v=2';
+    style.dataset.themeHotfix = 'true';
+    document.head.appendChild(style);
+  }
+
+  if (!document.querySelector('script[data-theme-hotfix]')) {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = '/src/theme-hotfix.js?v=2';
+    script.dataset.themeHotfix = 'true';
+    document.head.appendChild(script);
+  }
+})();
