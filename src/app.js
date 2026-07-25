@@ -1,0 +1,332 @@
+import { LoveStore } from './store.js';
+import { nanaSpeak, contextualEntry } from './nana.js';
+
+const config = window.__MYLOVE_CONFIG__ || {};
+const store = new LoveStore(config);
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const fmt = new Intl.NumberFormat('pt-BR');
+let authMode = 'signin';
+let currentPage = 'home';
+let lastNana = contextualEntry();
+
+const moods = [
+  { key: 'happy', emoji: '😊', label: 'Feliz' },
+  { key: 'love', emoji: '🥰', label: 'Apaixonado(a)' },
+  { key: 'missing', emoji: '🥺', label: 'Com saudade' },
+  { key: 'tired', emoji: '😴', label: 'Cansado(a)' },
+  { key: 'sad', emoji: '😔', label: 'Triste' },
+  { key: 'anxious', emoji: '😟', label: 'Ansioso(a)' },
+  { key: 'talk', emoji: '💬', label: 'Quero conversar' },
+  { key: 'okay', emoji: '🙂', label: 'Estou bem' }
+];
+
+const dailyQuotes = [
+  '“Dois corações, um destino.”',
+  '“O mapa mede quilômetros. Não mede comprometimento.”',
+  '“Amar alguém é incluí-lo nos próprios planos.”',
+  '“O mundo já é cansativo demais. Sejam descanso um para o outro.”',
+  '“Escolher a mesma pessoa diariamente importa.”'
+];
+
+function showView(name) {
+  for (const id of ['loadingView', 'authView', 'onboardingView', 'appView']) $(`#${id}`)?.classList.add('hidden');
+  $(`#${name}`)?.classList.remove('hidden');
+}
+
+function routeFromState() {
+  const s = store.state;
+  if (!s.user) return showView('authView');
+  if (!s.couple) return showView('onboardingView');
+  showView('appView');
+  render();
+}
+
+function toast(message, duration = 2600) {
+  const el = $('#toast');
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function confetti(count = 20) {
+  for (let i = 0; i < count; i++) {
+    const item = document.createElement('span');
+    item.className = 'confetti';
+    item.textContent = ['♥', '✦', '✿'][Math.floor(Math.random() * 3)];
+    item.style.left = `${20 + Math.random() * 60}%`;
+    item.style.top = `${25 + Math.random() * 35}%`;
+    item.style.color = ['#ff77a8', '#ffd16c', '#c995e3'][Math.floor(Math.random() * 3)];
+    item.style.fontSize = `${12 + Math.random() * 20}px`;
+    document.body.append(item);
+    setTimeout(() => item.remove(), 1700);
+  }
+}
+
+function nanaSay(topic, variables = {}, open = false) {
+  lastNana = nanaSpeak(topic, variables);
+  $('#nanaBubble').textContent = lastNana.text;
+  $('#nanaSprite').src = `assets/nana/${lastNana.sprite}.webp`;
+  $('#nanaModalText').textContent = lastNana.text;
+  $('#nanaModalSprite').src = `assets/nana/${lastNana.sprite}.webp`;
+  if (open) $('#nanaModal').showModal();
+  return lastNana;
+}
+
+function daysUntil(dateString) {
+  if (!dateString) return 36;
+  const target = new Date(`${dateString}T12:00:00`);
+  return Math.max(0, Math.ceil((target - Date.now()) / 86400000));
+}
+
+function dateTime(value) {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(value));
+}
+
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
+}
+
+function render() {
+  const s = store.state;
+  const progress = s.progress;
+  const target = (Math.floor(progress.xp / 1000) + 2) * 1000;
+  const levelStart = target - 1000;
+  const percentage = Math.max(3, Math.min(100, ((progress.xp - levelStart) / 1000) * 100));
+  $('#xpValue').textContent = fmt.format(progress.xp);
+  $('#xpTarget').textContent = fmt.format(target);
+  $('#xpFill').style.width = `${percentage}%`;
+  $('#affinityValue').textContent = progress.affinity;
+  $('#petLevel').textContent = s.pet.level;
+  $('#petBar').style.width = `${s.pet.xp}%`;
+  $('#memoryCount').textContent = s.memories.length + s.drawings.length;
+  $('#daysUntil').textContent = daysUntil(s.settings.nextMeeting);
+  $('#calendarDays').textContent = daysUntil(s.settings.nextMeeting);
+  $('#streakPill').textContent = `🔥 ${progress.streak} dias`;
+  $('#streakLarge').textContent = progress.streak;
+  $('#coupleLevel').textContent = progress.coupleLevel || Math.max(1, Math.floor(progress.xp / 1000));
+  $('#dailyQuote').textContent = dailyQuotes[new Date().getDate() % dailyQuotes.length];
+  $('#inviteCode').textContent = s.inviteCode || s.couple?.inviteCode || 'LOVE-8421';
+  $('#profileName').textContent = s.profile?.name || 'Adriel';
+  $('#profileEmail').textContent = s.user?.email || 'Modo demonstração';
+  $('#profileAvatar').src = (s.profile?.avatarKey || s.profile?.name || '').toLowerCase().includes('maria') ? 'assets/avatar-maria-map.webp' : 'assets/avatar-adriel-map.webp';
+  $('#connectionStatus').textContent = store.isConfigured() && s.mode === 'remote' ? 'Supabase conectado — sincronização em tempo real ativa.' : 'Modo local de demonstração — dados salvos apenas neste aparelho.';
+  $('#meetingDateInput').value = s.settings.nextMeeting || '';
+  $('#calendarDateInput').value = s.settings.nextMeeting || '';
+  $('#petNameInput').value = s.pet.name || 'Mochi';
+  $('#themeSelect').value = s.settings.theme || 'sakura';
+  document.body.classList.remove('theme-cyber', 'theme-cream');
+  if (s.settings.theme === 'cyber') document.body.classList.add('theme-cyber');
+  if (s.settings.theme === 'cream') document.body.classList.add('theme-cream');
+  renderMissions();
+  renderMood();
+  renderBoss();
+  renderRewards();
+  renderMessages();
+  renderMemories();
+  renderDrawings();
+  renderCapsules();
+  renderPet();
+}
+
+function renderMissions() {
+  const list = $('#missionList');
+  list.innerHTML = store.state.missions.map(mission => {
+    const checked = store.getTodayCompletion(mission);
+    return `<label class="mission"><input type="checkbox" data-mission="${escapeHtml(mission.id)}" ${checked ? 'checked' : ''}/><span>${escapeHtml(mission.title)}</span><b>+${mission.xp} XP</b></label>`;
+  }).join('');
+  $$('.mission input', list).forEach(input => input.addEventListener('change', async () => {
+    const mission = store.state.missions.find(m => m.id === input.dataset.mission);
+    input.disabled = true;
+    try {
+      const result = await store.toggleMission(mission);
+      if (result.completed) {
+        toast(`Missão concluída: +${mission.xp} XP ♥`);
+        confetti(12);
+        nanaSay(result.allDone ? 'allDone' : 'missionDone');
+      } else nanaSay('missed');
+      render();
+    } catch (error) { toast(error.message); input.checked = !input.checked; }
+    finally { input.disabled = false; }
+  }));
+  const allDone = store.state.missions.length > 0 && store.state.missions.every(m => store.getTodayCompletion(m));
+  $('#missionBonus').textContent = allDone ? 'Tudo concluído. Resultado adequado. Recompensa liberada. ✓' : 'Conclua todas e ganhe bônus! 🎁';
+}
+
+function renderMood() {
+  const userId = store.state.user?.id;
+  const current = store.state.moods[userId];
+  $('#moodOptions').innerHTML = moods.map(mood => `<button class="mood-button ${current?.mood_key === mood.key ? 'active' : ''}" data-mood="${mood.key}"><span class="emoji">${mood.emoji}</span><span>${mood.label}</span></button>`).join('');
+  $$('.mood-button').forEach(button => button.addEventListener('click', async () => {
+    const mood = moods.find(item => item.key === button.dataset.mood);
+    try { await store.setMood(mood.key, mood.emoji, mood.label); toast(`Check-in registrado: ${mood.emoji} ${mood.label}`); if (['sad','anxious'].includes(mood.key)) nanaSay('sad'); render(); } catch (error) { toast(error.message); }
+  }));
+  const partnerId = store.state.partner?.id;
+  const partnerMood = partnerId && store.state.moods[partnerId];
+  $('#partnerMood').textContent = partnerMood ? `${store.state.partner.name} está ${partnerMood.emoji} ${partnerMood.label}.` : 'Aguardando o check-in do seu amor…';
+}
+
+function renderBoss() {
+  const done = Object.values(store.state.completions).filter(Boolean).length;
+  const progress = Math.min(15, done + (store.state.progress.streak * 3));
+  $('#bossProgress').textContent = progress;
+  $('#bossFill').style.width = `${Math.min(100, progress / 15 * 100)}%`;
+  if (progress >= 15) {
+    $('#bossTitle').textContent = 'Boss derrotado: distância administrada';
+    $('#bossDescription').textContent = 'Disciplina, atenção e afeto. Uma combinação funcional.';
+  }
+}
+
+function renderRewards() {
+  const coins = store.state.progress.coins;
+  $('#rewardList').innerHTML = `<p><strong>💎 ${coins} moedas</strong></p>` + store.state.rewards.map(reward => `<div class="reward-item"><div><strong>${escapeHtml(reward.title)}</strong><small>${reward.cost} moedas</small></div><button data-reward="${reward.id}" ${coins < reward.cost ? 'disabled' : ''}>Resgatar</button></div>`).join('');
+  $$('#rewardList [data-reward]').forEach(button => button.addEventListener('click', async () => {
+    const reward = store.state.rewards.find(r => String(r.id) === button.dataset.reward);
+    try { await store.redeemReward(reward); toast(`Recompensa liberada: ${reward.title}`); confetti(18); render(); } catch (error) { toast(error.message); }
+  }));
+}
+
+function renderMessages() {
+  const list = $('#messageList');
+  const userId = store.state.user?.id;
+  if (!store.state.messages.length) list.innerHTML = '<p class="muted">Nenhuma mensagem ainda. Uma conversa honesta economiza muitas suposições.</p>';
+  else list.innerHTML = store.state.messages.map(message => `<article class="message ${message.sender_id === userId ? 'mine' : 'theirs'}"><div>${escapeHtml(message.content)}</div><small>${message.sender_id === userId ? 'Você' : store.state.partner?.name || 'Seu amor'} · ${dateTime(message.created_at)}</small></article>`).join('');
+  requestAnimationFrame(() => { list.scrollTop = list.scrollHeight; });
+}
+
+function renderMemories() {
+  const grid = $('#memoryGrid');
+  if (!store.state.memories.length) { grid.innerHTML = '<p class="muted">O baú está vazio.</p>'; return; }
+  grid.innerHTML = store.state.memories.map(memory => `<article class="memory-card">${memory.preview_url ? `<img src="${escapeHtml(memory.preview_url)}" alt="" />` : `<img src="assets/couple-polaroids.webp" alt="" />`}<div><h3>${escapeHtml(memory.title || 'Memória')}</h3><p>${escapeHtml(memory.content || '')}</p><small>${dateTime(memory.created_at || memory.createdAt)}</small></div></article>`).join('');
+}
+
+function renderDrawings() {
+  const grid = $('#drawingGrid');
+  if (!store.state.drawings.length) { grid.innerHTML = '<p class="muted">Nenhum desenho enviado ainda.</p>'; return; }
+  grid.innerHTML = store.state.drawings.map(drawing => `<article class="drawing-card"><img src="${escapeHtml(drawing.preview_url || drawing.dataUrl)}" alt="Desenho do casal" />${drawing.caption ? `<p>${escapeHtml(drawing.caption)}</p>` : ''}</article>`).join('');
+}
+
+function renderCapsules() {
+  const list = $('#capsuleList');
+  const nowDate = new Date();
+  if (!store.state.capsules.length) { list.innerHTML = '<p class="muted">Nenhuma cápsula selada.</p>'; return; }
+  list.innerHTML = store.state.capsules.map(capsule => {
+    const open = new Date(`${capsule.open_at}T12:00:00`) <= nowDate;
+    return `<article class="capsule-entry ${open ? '' : 'locked'}"><strong>${open ? '💌 Cápsula aberta' : '🔒 Abrir em ' + new Date(capsule.open_at + 'T12:00:00').toLocaleDateString('pt-BR')}</strong><p>${open ? escapeHtml(capsule.content) : 'Conteúdo protegido até a data escolhida.'}</p></article>`;
+  }).join('');
+}
+
+function renderPet() {
+  const pet = store.state.pet;
+  $('#petModalTitle').textContent = `${pet.name}, nosso gatinho`;
+  $('#hungerBar').style.width = `${pet.hunger}%`;
+  $('#loveBar').style.width = `${pet.love}%`;
+  $('#energyBar').style.width = `${pet.energy}%`;
+  if (pet.hunger < 30) $('#petMessage').textContent = 'Miau. A administração da alimentação foi questionável.';
+  else if (pet.love < 30) $('#petMessage').textContent = 'Ele sentiu falta de vocês. Eu também teria reclamações.';
+  else $('#petMessage').textContent = 'Parece satisfeito. Um resultado melhor do que muitos relatórios.';
+}
+
+function setPage(page) {
+  currentPage = page;
+  $$('.page').forEach(section => section.classList.toggle('active', section.dataset.page === page));
+  $$('.nav-item').forEach(button => button.classList.toggle('active', button.dataset.pageTarget === page));
+  if (page === 'messages') nanaSay('messages');
+  if (page === 'memories') nanaSay('memories');
+  if (page === 'us') nanaSay('romantic');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetCanvas() {
+  const canvas = $('#loveCanvas');
+  const context = canvas.getContext('2d');
+  context.fillStyle = '#fffaf1'; context.fillRect(0, 0, canvas.width, canvas.height);
+  context.strokeStyle = '#ef5d91'; context.lineWidth = 3; context.setLineDash([5, 7]);
+  context.strokeRect(18, 18, canvas.width - 36, canvas.height - 36); context.setLineDash([]);
+}
+
+function bindDrawing() {
+  const canvas = $('#loveCanvas');
+  const context = canvas.getContext('2d');
+  let drawing = false, last = null;
+  const point = event => { const rect = canvas.getBoundingClientRect(); return { x: (event.clientX - rect.left) * canvas.width / rect.width, y: (event.clientY - rect.top) * canvas.height / rect.height }; };
+  canvas.addEventListener('pointerdown', event => { drawing = true; last = point(event); canvas.setPointerCapture(event.pointerId); });
+  canvas.addEventListener('pointermove', event => { if (!drawing) return; const p = point(event); context.strokeStyle = $('#drawColor').value; context.lineWidth = Number($('#drawSize').value); context.lineCap = 'round'; context.lineJoin = 'round'; context.beginPath(); context.moveTo(last.x, last.y); context.lineTo(p.x, p.y); context.stroke(); last = p; });
+  ['pointerup','pointercancel','pointerleave'].forEach(name => canvas.addEventListener(name, () => { drawing = false; last = null; }));
+  $('#clearCanvas').addEventListener('click', resetCanvas);
+  $('#sendDrawing').addEventListener('click', async () => {
+    const button = $('#sendDrawing'); button.disabled = true;
+    try { await store.sendDrawing(canvas.toDataURL('image/jpeg', .82), $('#drawingCaption').value); $('#drawModal').close(); toast('Desenho enviado para o seu amor ♥'); confetti(18); nanaSay('drawing'); render(); }
+    catch (error) { toast(error.message); }
+    finally { button.disabled = false; }
+  });
+}
+
+function bindEvents() {
+  $('#authToggle').addEventListener('click', () => {
+    authMode = authMode === 'signin' ? 'signup' : 'signin';
+    $('#authName').closest('label').style.display = authMode === 'signup' ? 'grid' : 'none';
+    $('#authSubmit').textContent = authMode === 'signup' ? 'Criar conta' : 'Entrar';
+    $('#authToggle').textContent = authMode === 'signup' ? 'Já tenho uma conta' : 'Ainda não tenho conta';
+  });
+  $('#authName').closest('label').style.display = 'none';
+  $('#authForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    const status = $('#authStatus'); status.textContent = 'Conectando…';
+    try {
+      if (authMode === 'signup') {
+        const data = await store.signUp($('#authName').value.trim(), $('#authEmail').value.trim(), $('#authPassword').value);
+        status.textContent = data.session ? 'Conta criada.' : 'Conta criada. Verifique o e-mail para confirmar.';
+      } else await store.signIn($('#authEmail').value.trim(), $('#authPassword').value);
+      routeFromState();
+    } catch (error) { status.textContent = error.message; }
+  });
+  $('#demoMode').addEventListener('click', () => { store.startDemo(); routeFromState(); nanaSay('entry'); });
+  $('#createCoupleBtn').addEventListener('click', async () => { try { await store.createCouple(); routeFromState(); toast('Espaço criado. Envie o código para Maria.'); } catch (error) { $('#onboardingStatus').textContent = error.message; } });
+  $('#joinCoupleBtn').addEventListener('click', async () => { try { await store.joinCouple($('#joinCode').value); routeFromState(); toast('Corações conectados.'); confetti(30); } catch (error) { $('#onboardingStatus').textContent = error.message; } });
+  $('#onboardingLogout').addEventListener('click', () => store.signOut());
+  $$('.nav-item').forEach(button => button.addEventListener('click', () => setPage(button.dataset.pageTarget)));
+  $('#loveBtn').addEventListener('click', async () => { await store.giveLove(); confetti(12); toast('+5 XP de carinho ♥'); nanaSay('romantic'); render(); });
+  $('#heartScore').addEventListener('click', () => { toast(`Afinidade do casal: ${store.state.progress.affinity}%`); nanaSay('xp'); });
+  $('#mapCard').addEventListener('click', event => { if (!event.target.closest('button')) nanaSay('map', {}, true); });
+  $('#drawBtn').addEventListener('click', () => { resetCanvas(); $('#drawingCaption').value = ''; $('#drawModal').showModal(); nanaSay('drawing'); });
+  $('#petBtn').addEventListener('click', () => { renderPet(); $('#petModal').showModal(); nanaSay('pet'); });
+  $('#chestBtn').addEventListener('click', () => setPage('memories'));
+  $('#nanaBtn').addEventListener('click', () => { $('#nanaModalText').textContent = lastNana.text; $('#nanaModalSprite').src = `assets/nana/${lastNana.sprite}.webp`; $('#nanaModal').showModal(); });
+  $$('.nana-topics button').forEach(button => button.addEventListener('click', () => nanaSay(button.dataset.nanaTopic, { days: daysUntil(store.state.settings.nextMeeting) }, true)));
+  $('#calendarBtn').addEventListener('click', () => { render(); $('#calendarModal').showModal(); nanaSay('countdown', { days: daysUntil(store.state.settings.nextMeeting) }); });
+  $('#nextDateBtn').addEventListener('click', event => { event.stopPropagation(); $('#calendarModal').showModal(); nanaSay('countdown', { days: daysUntil(store.state.settings.nextMeeting) }); });
+  $('#saveMeetingDate').addEventListener('click', async () => { await store.updateSettings({ nextMeeting: $('#calendarDateInput').value }); $('#calendarModal').close(); toast('Próximo encontro atualizado.'); render(); });
+  $('#meetingDateInput').addEventListener('change', async event => { await store.updateSettings({ nextMeeting: event.target.value }); render(); });
+  $('#petNameInput').addEventListener('change', async event => { await store.updateSettings({ petName: event.target.value.trim() || 'Mochi' }); render(); });
+  $('#themeSelect').addEventListener('change', async event => { await store.updateSettings({ theme: event.target.value }); render(); });
+  $('#feedPet').addEventListener('click', () => petAction('feed'));
+  $('#petPet').addEventListener('click', () => petAction('love'));
+  $('#playPet').addEventListener('click', () => petAction('play'));
+  $('#messageForm').addEventListener('submit', async event => { event.preventDefault(); const input = $('#messageInput'); const content = input.value; if (!content.trim()) return; input.value = ''; try { await store.sendMessage(content); toast('Mensagem enviada.'); nanaSay('messages'); render(); } catch (error) { input.value = content; toast(error.message); } });
+  $('#newMemoryBtn').addEventListener('click', () => { $('#memoryTitle').value = ''; $('#memoryContent').value = ''; $('#memoryFile').value = ''; $('#memoryModal').showModal(); });
+  $('#saveMemoryBtn').addEventListener('click', async () => { const title = $('#memoryTitle').value.trim(); if (!title) return toast('Dê um título à memória.'); try { await store.addMemory({ title, content: $('#memoryContent').value.trim(), file: $('#memoryFile').files[0] }); $('#memoryModal').close(); toast('Memória guardada no baú.'); nanaSay('memories'); render(); } catch (error) { toast(error.message); } });
+  $('#openCapsulesBtn').addEventListener('click', () => { renderCapsules(); $('#capsuleModal').showModal(); });
+  $('#saveCapsuleBtn').addEventListener('click', async () => { const content = $('#capsuleContent').value.trim(), date = $('#capsuleDate').value; if (!content || !date) return toast('Escreva a mensagem e escolha a data.'); await store.addCapsule(content, date); $('#capsuleContent').value = ''; renderCapsules(); toast('Cápsula selada.'); });
+  $('#copyInviteBtn').addEventListener('click', async () => { const code = store.state.inviteCode; await navigator.clipboard.writeText(`Entre no My love is You com o código ${code}`); toast('Convite copiado.'); });
+  $('#notificationBtn').addEventListener('click', async () => { if (!('Notification' in window)) return toast('Este navegador não suporta notificações.'); const permission = await Notification.requestPermission(); toast(permission === 'granted' ? 'Notificações ativadas.' : 'Permissão não concedida.'); });
+  $('#giftBtn').addEventListener('click', () => { store.state.progress.coins += 10; store.persistLocal(); confetti(24); toast('Recompensa diária: +10 moedas 💎'); nanaSay('streak'); render(); });
+  $('#logoutBtn').addEventListener('click', async () => { await store.signOut(); routeFromState(); });
+}
+
+async function petAction(type) {
+  try { const result = await store.petAction(type); toast(result.leveled ? `Nível ${store.state.pet.level}! O pequeno está evoluindo adequadamente.` : 'Pet cuidado. Responsabilidade básica concluída.'); nanaSay('pet'); if (result.leveled) confetti(20); render(); } catch (error) { toast(error.message); }
+}
+
+store.subscribe((_state, event) => {
+  if (['signedOut', 'needsOnboarding', 'remoteReady', 'demoStarted'].includes(event)) routeFromState();
+  if (!$('#appView').classList.contains('hidden')) render();
+});
+
+bindEvents();
+bindDrawing();
+store.init().then(() => { routeFromState(); setTimeout(() => nanaSay(contextualEntry().topic || 'entry'), 500); });
+
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));

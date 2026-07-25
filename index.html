@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#25142f" />
+  <meta name="description" content="My love is You — o universo compartilhado de Adriel e Maria." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>My love is You</title>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><div class="skyline"></div><div class="stars"></div></div>
+
+  <main id="shell" class="phone-frame phone-shell">
+    <section id="loadingView" class="center-view">
+      <img src="assets/logo.webp" class="splash-logo" alt="My love is You" />
+      <div class="loader"></div>
+      <p>Organizando o amor com eficiência…</p>
+    </section>
+
+    <section id="authView" class="center-view hidden">
+      <div class="auth-card">
+        <img src="assets/logo.webp" class="auth-logo" alt="My love is You" />
+        <div class="auth-couple">
+          <img src="assets/avatar-adriel-mini.webp" alt="Adriel" />
+          <img src="assets/heart-main.webp" alt="" />
+          <img src="assets/avatar-maria-mini.webp" alt="Maria" />
+        </div>
+        <h1>Nosso universo começa aqui</h1>
+        <p class="muted">Entre com sua conta. Cada celular terá seu próprio perfil.</p>
+        <form id="authForm">
+          <label>Nome <input id="authName" autocomplete="name" placeholder="Seu nome" /></label>
+          <label>E-mail <input id="authEmail" type="email" autocomplete="email" required placeholder="voce@email.com" /></label>
+          <label>Senha <input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo 6 caracteres" /></label>
+          <button class="primary-button" type="submit" id="authSubmit">Entrar</button>
+        </form>
+        <button class="text-button" id="authToggle" type="button">Ainda não tenho conta</button>
+        <button class="demo-button" id="demoMode" type="button">Abrir demonstração local</button>
+        <p id="authStatus" class="status-text"></p>
+      </div>
+    </section>
+
+    <section id="onboardingView" class="center-view hidden">
+      <div class="auth-card onboarding-card">
+        <img src="assets/logo.webp" class="auth-logo" alt="My love is You" />
+        <h1>Conectem os dois corações</h1>
+        <p class="muted">Uma pessoa cria o espaço e envia o código. A outra entra usando esse mesmo código.</p>
+        <div class="onboarding-actions">
+          <button class="choice-card" id="createCoupleBtn">
+            <img src="assets/icon-home.webp" alt="" />
+            <strong>Criar nosso espaço</strong>
+            <span>Gera um código exclusivo</span>
+          </button>
+          <div class="join-card">
+            <img src="assets/icon-envelope.webp" alt="" />
+            <strong>Entrar com código</strong>
+            <input id="joinCode" maxlength="12" placeholder="LOVE-8421" />
+            <button class="primary-button" id="joinCoupleBtn">Conectar</button>
+          </div>
+        </div>
+        <p id="onboardingStatus" class="status-text"></p>
+        <button class="text-button" id="onboardingLogout">Sair da conta</button>
+      </div>
+    </section>
+
+    <section id="appView" class="app hidden">
+      <header class="topbar">
+        <button class="top-icon" id="giftBtn" aria-label="Recompensa diária"><img src="assets/icon-gift.webp" alt="" /></button>
+        <img class="logo" src="assets/logo.webp" alt="My love is You" />
+        <button class="top-icon" id="calendarBtn" aria-label="Próximo encontro"><span class="notification-dot"></span><span class="calendar-glyph">▦</span></button>
+      </header>
+
+      <div id="pageContainer">
+        <section class="page active" data-page="home">
+          <section class="couple-card glass-card">
+            <article class="person adriel">
+              <img class="person-avatar" src="assets/avatar-adriel.webp" alt="Avatar de Adriel" />
+              <div class="nameplate green">Adriel</div>
+              <div class="level green-text">Nível <span id="adrielLevel">24</span></div>
+            </article>
+            <div class="couple-center">
+              <button class="heart-score" id="heartScore"><img src="assets/heart-main.webp" alt="" /><strong id="affinityValue">84</strong></button>
+              <div class="xp-label">Nosso XP</div>
+              <div class="xp-track"><span id="xpFill"></span></div>
+              <div class="xp-number"><span id="xpValue">8.480</span> / <span id="xpTarget">10.000</span></div>
+              <div class="xp-goal">♥ Próximo nível do casal</div>
+            </div>
+            <article class="person maria">
+              <img class="person-avatar" src="assets/avatar-maria.webp" alt="Avatar de Maria" />
+              <div class="nameplate pink">Maria</div>
+              <div class="level pink-text">Nível <span id="mariaLevel">25</span></div>
+            </article>
+            <blockquote class="couple-quote">♥ <span id="dailyQuote">“Dois corações, um destino.”</span> ♥</blockquote>
+          </section>
+
+          <section class="map-card soft-card" id="mapCard">
+            <div class="section-heading">
+              <h2>📍 Mapa do amor</h2>
+              <button class="next-date" id="nextDateBtn"><small>Próximo encontro</small><strong>📅 <span id="daysUntil">36</span> dias</strong></button>
+            </div>
+            <div class="map-stage">
+              <img class="map-bg" src="assets/map-parchment.webp" alt="Mapa estilizado entre Barrinha e Franca" />
+              <svg class="route" viewBox="0 0 1000 350" preserveAspectRatio="none" aria-hidden="true"><path d="M165 176 C310 80, 430 260, 555 165 S770 95, 840 170" pathLength="1" /></svg>
+              <img class="route-heart" src="assets/heart-main.webp" alt="" />
+              <div class="map-person origin"><img src="assets/avatar-adriel-map.webp" alt="Adriel em Barrinha" /><span>Barrinha, SP</span></div>
+              <div class="map-person destination"><img src="assets/avatar-maria-map.webp" alt="Maria em Franca" /><span>Franca, SP</span></div>
+              <div class="distance"><small>Distância aproximada</small><strong>125 km</strong><span>O mapa mede quilômetros. Não mede comprometimento.</span></div>
+            </div>
+          </section>
+
+          <section class="feature-grid">
+            <button class="feature-card purple" id="drawBtn"><h3>✎ Escreva na tela</h3><p>Desenhe ou escreva algo fofo para o seu amor</p><img src="assets/draw-board.webp" alt="Lousa" /></button>
+            <button class="feature-card purple" id="petBtn"><h3>🐾 Pet virtual</h3><p>Cuide do nosso gato juntinhos!</p><img src="assets/pet-cat.webp" alt="Gato virtual" /><div class="pet-level"><span id="petBar"></span><b>Lv. <span id="petLevel">15</span></b></div></button>
+            <button class="feature-card purple" id="chestBtn"><h3>▣ Baú do amor</h3><p>Memórias, fotos e momentos especiais</p><img src="assets/chest.webp" alt="Baú" /><span class="item-count"><span id="memoryCount">32</span> itens</span></button>
+          </section>
+
+          <section class="lower-grid">
+            <article class="missions-card soft-card">
+              <div class="mission-title-row"><h2>🎯 Missões de hoje</h2><span id="streakPill" class="streak-pill">🔥 0 dias</span></div>
+              <div id="missionList"></div>
+              <p class="mission-bonus" id="missionBonus">Conclua todas e ganhe bônus! 🎁</p>
+            </article>
+            <article class="maria-card soft-card"><h3>♥ Coisas da Maria</h3><ul><li>🧒 Crianças</li><li>🐱 Gatos</li><li>🥤 Milkshake de morango</li></ul></article>
+            <article class="goals-card soft-card"><h3>⭐ Metas da Maria</h3><ul><li>♥ Se formar e dar aulas</li><li>♥ Tirar habilitação</li><li>♥ Casar com Adriel</li></ul></article>
+          </section>
+        </section>
+
+        <section class="page" data-page="us">
+          <header class="page-header"><h1>Nós dois</h1><p>Pequenas ações. Evolução compartilhada.</p></header>
+          <section class="soft-card mood-card"><h2>Como você está agora?</h2><div id="moodOptions" class="mood-options"></div><p id="partnerMood" class="partner-mood">Aguardando o check-in do seu amor…</p></section>
+          <section class="two-column">
+            <article class="soft-card stat-card"><span>🔥</span><strong id="streakLarge">0</strong><small>dias de sequência</small></article>
+            <article class="soft-card stat-card"><span>💗</span><strong id="coupleLevel">8</strong><small>nível do casal</small></article>
+          </section>
+          <section class="soft-card boss-card"><div><small>Boss semanal</small><h2 id="bossTitle">Derrotar a distância</h2><p id="bossDescription">Cumpram 15 missões juntos nesta semana.</p><div class="boss-progress"><span id="bossFill"></span></div><small><span id="bossProgress">0</span>/15 ações</small></div><img src="assets/launch-rocket.webp" alt="" /></section>
+          <section class="soft-card capsule-card"><img src="assets/memory-capsule.webp" alt="Cápsula do tempo" /><div><h2>Cápsula do tempo</h2><p>Escrevam hoje. Abram apenas na data escolhida.</p><button class="secondary-button" id="openCapsulesBtn">Ver cápsulas</button></div></section>
+          <section class="soft-card reward-card"><h2>Loja de recompensas</h2><div id="rewardList" class="reward-list"></div></section>
+        </section>
+
+        <section class="page" data-page="messages">
+          <header class="page-header"><h1>Mensagens</h1><p>Visualizar e desaparecer não é uma estratégia recomendável.</p></header>
+          <section class="chat-card soft-card"><div id="messageList" class="message-list"></div><form id="messageForm" class="message-form"><textarea id="messageInput" rows="2" maxlength="500" placeholder="Escreva o que sente. Com objetividade, se possível."></textarea><button class="send-button" type="submit">Enviar ♥</button></form></section>
+        </section>
+
+        <section class="page" data-page="memories">
+          <header class="page-header"><h1>Baú do amor</h1><p>Guardem isso. O cotidiano costuma apagar detalhes.</p></header>
+          <button class="primary-button full" id="newMemoryBtn">+ Guardar nova memória</button>
+          <div id="memoryGrid" class="memory-grid"></div>
+          <section class="soft-card drawings-section"><h2>Desenhos recebidos</h2><div id="drawingGrid" class="drawing-grid"></div></section>
+        </section>
+
+        <section class="page" data-page="profile">
+          <header class="page-header"><h1>Configurações</h1><p>O relacionamento funciona melhor quando os parâmetros estão claros.</p></header>
+          <section class="soft-card profile-card"><img id="profileAvatar" src="assets/avatar-adriel-map.webp" alt="" /><div><h2 id="profileName">Adriel</h2><p id="profileEmail">Modo demonstração</p></div></section>
+          <section class="soft-card settings-list">
+            <label>Data do próximo encontro <input id="meetingDateInput" type="date" /></label>
+            <label>Nome do gato <input id="petNameInput" maxlength="30" value="Mochi" /></label>
+            <label>Tema <select id="themeSelect"><option value="sakura">Sakura noturna</option><option value="cyber">Romance cyber</option><option value="cream">Café aconchegante</option></select></label>
+            <button class="secondary-button" id="notificationBtn">Ativar notificações do navegador</button>
+          </section>
+          <section class="soft-card invite-card"><h2>Código do casal</h2><strong id="inviteCode">LOVE-8421</strong><button class="secondary-button" id="copyInviteBtn">Copiar convite</button></section>
+          <section class="soft-card status-card"><h2>Status da conexão</h2><p id="connectionStatus">Modo local</p></section>
+          <button class="danger-button" id="logoutBtn">Sair</button>
+        </section>
+      </div>
+
+      <button class="nana-widget" id="nanaBtn" aria-label="Conversar com Nana"><span class="nana-bubble" id="nanaBubble">Vocês chegaram. Ótimo. Podemos começar.</span><img id="nanaSprite" src="assets/nana/neutral.webp" alt="Nana" /><span class="nana-label">Nana ♥</span></button>
+
+      <nav class="bottom-nav" aria-label="Navegação principal">
+        <button class="nav-item active" data-page-target="home"><img src="assets/icon-home.webp" alt="" /><span>Início</span></button>
+        <button class="nav-item" data-page-target="us"><img src="assets/heart-main.webp" alt="" /><span>Nós</span></button>
+        <button class="nav-heart" id="loveBtn"><img src="assets/heart-main.webp" alt="Carinho" /></button>
+        <button class="nav-item" data-page-target="messages"><img src="assets/icon-chat.webp" alt="" /><span>Mensagens</span><i id="messageDot"></i></button>
+        <button class="nav-item" data-page-target="profile"><span class="profile-glyph">♙</span><span>Perfil</span></button>
+      </nav>
+    </section>
+  </main>
+
+  <dialog class="modal" id="drawModal"><form method="dialog" class="modal-card draw-modal-card"><header><h2>Escreva para o seu amor</h2><button value="cancel">×</button></header><canvas id="loveCanvas" width="700" height="520"></canvas><input id="drawingCaption" maxlength="100" placeholder="Uma legenda opcional…" /><div class="draw-tools"><label>Cor <input type="color" id="drawColor" value="#ef5d91" /></label><label>Traço <input type="range" id="drawSize" min="2" max="28" value="8" /></label><button type="button" id="clearCanvas" class="secondary-button">Limpar</button><button type="button" id="sendDrawing" class="primary-button">Enviar desenho ♥</button></div></form></dialog>
+
+  <dialog class="modal" id="petModal"><form method="dialog" class="modal-card pet-modal-card"><header><h2 id="petModalTitle">Nosso gatinho</h2><button value="cancel">×</button></header><img src="assets/pet-cat.webp" alt="Gato virtual" class="pet-big" /><p id="petMessage">Miau. Eu estava esperando vocês.</p><div class="pet-stats"><label>Fome <span><i id="hungerBar"></i></span></label><label>Carinho <span><i id="loveBar"></i></span></label><label>Energia <span><i id="energyBar"></i></span></label></div><div class="modal-actions"><button type="button" id="feedPet">Dar petisco</button><button type="button" id="petPet">Fazer carinho</button><button type="button" id="playPet">Brincar</button></div></form></dialog>
+
+  <dialog class="modal" id="memoryModal"><form method="dialog" class="modal-card"><header><h2>Guardar memória</h2><button value="cancel">×</button></header><label>Título <input id="memoryTitle" maxlength="80" /></label><label>Descrição <textarea id="memoryContent" maxlength="500" rows="4"></textarea></label><label>Foto <input id="memoryFile" type="file" accept="image/*" /></label><button type="button" class="primary-button" id="saveMemoryBtn">Guardar no baú ♥</button></form></dialog>
+
+  <dialog class="modal" id="capsuleModal"><form method="dialog" class="modal-card"><header><h2>Cápsulas do tempo</h2><button value="cancel">×</button></header><div id="capsuleList" class="capsule-list"></div><hr /><label>Mensagem futura <textarea id="capsuleContent" rows="4" maxlength="500"></textarea></label><label>Abrir em <input id="capsuleDate" type="date" /></label><button type="button" class="primary-button" id="saveCapsuleBtn">Selar cápsula</button></form></dialog>
+
+  <dialog class="modal" id="calendarModal"><form method="dialog" class="modal-card"><header><h2>Próximo encontro</h2><button value="cancel">×</button></header><img src="assets/phones-heart.webp" class="modal-hero-small" alt="" /><p class="large-count"><strong id="calendarDays">36</strong> dias</p><p>Planejem com antecedência. Improvisar viagens costuma ser caro.</p><label>Alterar data <input id="calendarDateInput" type="date" /></label><button type="button" class="primary-button" id="saveMeetingDate">Salvar data</button></form></dialog>
+
+  <dialog class="modal" id="nanaModal"><form method="dialog" class="modal-card nana-modal-card"><header><h2>Nana</h2><button value="cancel">×</button></header><img id="nanaModalSprite" src="assets/nana/neutral.webp" alt="Nana" /><blockquote id="nanaModalText">Amor também exige constância.</blockquote><div class="nana-topics"><button type="button" data-nana-topic="romantic">Amor</button><button type="button" data-nana-topic="missions">Missões</button><button type="button" data-nana-topic="map">Distância</button><button type="button" data-nana-topic="sad">Dia difícil</button><button type="button" data-nana-topic="night">Boa noite</button></div></form></dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
