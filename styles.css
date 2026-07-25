@@ -413,3 +413,33 @@ body.proposal-mode #pageContainer { min-height:100dvh; }
   .proposal-choice-area { min-height:210px; margin-top:-88px; }
   .proposal-no img { width:105px; }
 }
+
+
+/* Login simples exclusivo de Adriel e Maria */
+.simple-auth-card { overflow:hidden; }
+.profile-picker { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:22px 0 12px; }
+.login-profile { position:relative; min-height:230px; padding:16px 12px 18px; border:2px solid rgba(222,173,208,.72); border-radius:25px; background:linear-gradient(155deg,rgba(255,255,255,.94),rgba(250,232,247,.84)); color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:4px; cursor:pointer; box-shadow:0 14px 32px rgba(80,37,78,.10); transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease; overflow:hidden; }
+.login-profile::before { content:''; position:absolute; inset:9px; border-radius:19px; background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.95),rgba(255,209,229,.20) 58%,transparent 75%); pointer-events:none; }
+.login-profile:hover,.login-profile:focus-visible { transform:translateY(-4px); box-shadow:0 18px 38px rgba(80,37,78,.18); border-color:#ed6c9a; outline:none; }
+.login-profile img { position:relative; z-index:1; width:150px; height:150px; object-fit:contain; margin-bottom:2px; }
+.login-profile strong,.login-profile span { position:relative; z-index:1; }
+.login-profile strong { font-size:20px; }
+.login-profile span { font-size:13px; font-weight:800; color:#a45a83; }
+.adriel-profile { border-bottom-color:#9eb878; }
+.maria-profile { border-bottom-color:#ef8bb5; }
+.tiny-note { text-align:center; color:var(--muted); font-size:12px; margin:6px 0 0; }
+.profile-login-panel { display:grid; gap:14px; }
+.back-profile-button { justify-self:start; border:0; background:transparent; color:#a34070; font-weight:800; cursor:pointer; padding:4px 0; }
+.selected-profile { display:flex; align-items:center; justify-content:center; gap:14px; padding:8px 14px 14px; }
+.selected-profile img { width:92px; height:92px; object-fit:contain; }
+.selected-profile div { display:grid; gap:2px; }
+.selected-profile small { color:var(--muted); }
+.selected-profile strong { font-size:25px; }
+#emailHelp { color:var(--muted); font-weight:500; font-size:11px; }
+#firstAccessBtn { margin-top:-5px; }
+.join-card img { filter:drop-shadow(0 7px 9px rgba(112,52,87,.18)); }
+@media (max-width:430px) {
+  .profile-picker { gap:10px; }
+  .login-profile { min-height:205px; padding:10px 6px 14px; }
+  .login-profile img { width:125px; height:125px; }
+}

@@ -94,7 +94,14 @@ export class LoveStore {
 
   async signUp(name, email, password) {
     if (!this.supabase) throw new Error('Supabase ainda não configurado. Use o modo demonstração por enquanto.');
-    const { data, error } = await this.supabase.auth.signUp({ email, password, options: { data: { name } } });
+    const { data, error } = await this.supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name },
+        emailRedirectTo: `${window.location.origin}${window.location.pathname}`
+      }
+    });
     if (error) throw error;
     if (data.user && data.session) await this.bootstrapRemote(data.user);
     return data;

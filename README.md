@@ -84,3 +84,8 @@ O botão de presente no topo da Home abre uma experiência especial em quatro et
 Ao tocar em **SIM**, o aceite é salvo no aparelho. Quando o casal estiver conectado ao Supabase, o app também tenta registrar uma mensagem e uma memória compartilhada.
 
 A música não é armazenada no projeto. O player abre a publicação oficial por streaming, após interação da usuária, respeitando bloqueios de autoplay do navegador.
+
+
+## Login de dois perfis
+
+O fluxo simplificado está documentado em `docs/LOGIN_SIMPLES.md`. A imagem quebrada do onboarding foi corrigida com um asset válido de envelope.

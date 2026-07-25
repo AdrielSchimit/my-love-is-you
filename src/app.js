@@ -6,7 +6,7 @@ const store = new LoveStore(config);
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const fmt = new Intl.NumberFormat('pt-BR');
-let authMode = 'signin';
+let selectedAuthProfile = null;
 let currentPage = 'home';
 let lastNana = contextualEntry();
 let proposalNoAttempts = 0;
@@ -39,9 +39,72 @@ function showView(name) {
 function routeFromState() {
   const s = store.state;
   if (!s.user) return showView('authView');
-  if (!s.couple) return showView('onboardingView');
+  if (!s.couple) {
+    prepareOnboarding();
+    return showView('onboardingView');
+  }
   showView('appView');
   render();
+}
+
+function getLoginProfiles() {
+  const savedMariaEmail = localStorage.getItem('my-love-is-you-maria-email') || '';
+  const configured = config.profiles || {};
+  return {
+    adriel: {
+      name: configured.adriel?.name || 'Adriel',
+      email: configured.adriel?.email || 'schimitadriel100@gmail.com',
+      avatar: configured.adriel?.avatar || 'assets/avatar-adriel.webp',
+      level: configured.adriel?.level || 24
+    },
+    maria: {
+      name: configured.maria?.name || 'Maria',
+      email: configured.maria?.email || savedMariaEmail,
+      avatar: configured.maria?.avatar || 'assets/avatar-maria.webp',
+      level: configured.maria?.level || 25
+    }
+  };
+}
+
+function selectLoginProfile(key) {
+  const profile = getLoginProfiles()[key];
+  if (!profile) return;
+  selectedAuthProfile = key;
+  $('#profilePicker').classList.add('hidden');
+  $('#profileLoginPanel').classList.remove('hidden');
+  $('#selectedProfileAvatar').src = profile.avatar;
+  $('#selectedProfileAvatar').alt = `Avatar de ${profile.name}`;
+  $('#selectedProfileName').textContent = profile.name;
+  $('#authSubmit').textContent = `Entrar como ${profile.name}`;
+  $('#authStatus').textContent = '';
+  $('#authPassword').value = '';
+  $('#authEmail').value = profile.email || '';
+  const needsEmail = !profile.email;
+  $('#authEmailLabel').classList.toggle('hidden', !needsEmail);
+  $('#authEmail').required = needsEmail;
+  $('#firstAccessBtn').classList.toggle('hidden', key !== 'maria');
+  setTimeout(() => (needsEmail ? $('#authEmail') : $('#authPassword')).focus(), 30);
+}
+
+function showProfilePicker() {
+  selectedAuthProfile = null;
+  $('#profileLoginPanel').classList.add('hidden');
+  $('#profilePicker').classList.remove('hidden');
+  $('#authStatus').textContent = '';
+}
+
+function prepareOnboarding() {
+  const isMaria = store.state.profile?.avatarKey === 'maria' || /^maria/i.test(store.state.profile?.name || '');
+  const createCard = $('#createCoupleBtn');
+  const joinCard = $('#joinCoupleCard');
+  if (createCard) createCard.classList.toggle('hidden', isMaria);
+  if (joinCard) joinCard.classList.remove('hidden');
+  const input = $('#joinCode');
+  if (input && !input.value) input.value = config.defaultInviteCode || store.state.inviteCode || '';
+  const text = $('#onboardingView .muted');
+  if (text) text.textContent = isMaria
+    ? 'Seu espaço já foi criado pelo Adriel. Toque em Conectar para unir os dois perfis.'
+    : 'Crie o espaço uma única vez. Depois, a Maria entra usando o código mostrado.';
 }
 
 function toast(message, duration = 2600) {
@@ -324,26 +387,60 @@ function bindDrawing() {
 }
 
 function bindEvents() {
-  $('#authToggle').addEventListener('click', () => {
-    authMode = authMode === 'signin' ? 'signup' : 'signin';
-    $('#authName').closest('label').style.display = authMode === 'signup' ? 'grid' : 'none';
-    $('#authSubmit').textContent = authMode === 'signup' ? 'Criar conta' : 'Entrar';
-    $('#authToggle').textContent = authMode === 'signup' ? 'Já tenho uma conta' : 'Ainda não tenho conta';
-  });
-  $('#authName').closest('label').style.display = 'none';
+  $$('[data-login-profile]').forEach(button => button.addEventListener('click', () => selectLoginProfile(button.dataset.loginProfile)));
+  $('#backToProfiles').addEventListener('click', showProfilePicker);
+  $('#demoMode').classList.toggle('hidden', config.demoEnabled === false);
+
   $('#authForm').addEventListener('submit', async event => {
     event.preventDefault();
-    const status = $('#authStatus'); status.textContent = 'Conectando…';
+    if (!selectedAuthProfile) return showProfilePicker();
+    const profile = getLoginProfiles()[selectedAuthProfile];
+    const email = (profile.email || $('#authEmail').value).trim().toLowerCase();
+    const status = $('#authStatus');
+    if (!email) { status.textContent = 'Informe o e-mail da Maria neste primeiro acesso.'; return; }
+    status.textContent = 'Conectando…';
+    $('#authSubmit').disabled = true;
     try {
-      if (authMode === 'signup') {
-        const data = await store.signUp($('#authName').value.trim(), $('#authEmail').value.trim(), $('#authPassword').value);
-        status.textContent = data.session ? 'Conta criada.' : 'Conta criada. Verifique o e-mail para confirmar.';
-      } else await store.signIn($('#authEmail').value.trim(), $('#authPassword').value);
+      await store.signIn(email, $('#authPassword').value);
+      if (selectedAuthProfile === 'maria') localStorage.setItem('my-love-is-you-maria-email', email);
       routeFromState();
-    } catch (error) { status.textContent = error.message; }
+    } catch (error) {
+      status.textContent = error.message === 'Invalid login credentials'
+        ? 'Senha incorreta ou conta ainda não criada.'
+        : error.message;
+    } finally {
+      $('#authSubmit').disabled = false;
+    }
   });
+
+  $('#firstAccessBtn').addEventListener('click', async () => {
+    if (selectedAuthProfile !== 'maria') return;
+    const email = $('#authEmail').value.trim().toLowerCase();
+    const password = $('#authPassword').value;
+    const status = $('#authStatus');
+    if (!email) { $('#authEmailLabel').classList.remove('hidden'); $('#authEmail').required = true; status.textContent = 'Digite o e-mail da Maria.'; return; }
+    if (password.length < 6) { status.textContent = 'A senha precisa ter pelo menos 6 caracteres.'; return; }
+    status.textContent = 'Criando o perfil da Maria…';
+    $('#firstAccessBtn').disabled = true;
+    try {
+      const data = await store.signUp('Maria', email, password);
+      localStorage.setItem('my-love-is-you-maria-email', email);
+      if (data.session) {
+        routeFromState();
+      } else {
+        status.textContent = 'Perfil criado. Confirme o e-mail e depois volte para entrar.';
+      }
+    } catch (error) {
+      status.textContent = error.message.includes('already registered')
+        ? 'Essa conta já existe. Use o botão Entrar como Maria.'
+        : error.message;
+    } finally {
+      $('#firstAccessBtn').disabled = false;
+    }
+  });
+
   $('#demoMode').addEventListener('click', () => { store.startDemo(); routeFromState(); nanaSay('entry'); });
-  $('#createCoupleBtn').addEventListener('click', async () => { try { await store.createCouple(); routeFromState(); toast('Espaço criado. Envie o código para Maria.'); } catch (error) { $('#onboardingStatus').textContent = error.message; } });
+  $('#createCoupleBtn').addEventListener('click', async () => { try { await store.createCouple(); routeFromState(); toast(`Espaço criado. Código: ${store.state.inviteCode}`); } catch (error) { $('#onboardingStatus').textContent = error.message; } });
   $('#joinCoupleBtn').addEventListener('click', async () => { try { await store.joinCouple($('#joinCode').value); routeFromState(); toast('Corações conectados.'); confetti(30); } catch (error) { $('#onboardingStatus').textContent = error.message; } });
   $('#onboardingLogout').addEventListener('click', () => store.signOut());
   $$('.nav-item').forEach(button => button.addEventListener('click', () => setPage(button.dataset.pageTarget)));

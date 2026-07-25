@@ -22,24 +22,48 @@
     </section>
 
     <section id="authView" class="center-view hidden">
-      <div class="auth-card">
+      <div class="auth-card simple-auth-card">
         <img src="assets/logo.webp" class="auth-logo" alt="My love is You" />
-        <div class="auth-couple">
-          <img src="assets/avatar-adriel-mini.webp" alt="Adriel" />
-          <img src="assets/heart-main.webp" alt="" />
-          <img src="assets/avatar-maria-mini.webp" alt="Maria" />
+
+        <div id="profilePicker">
+          <h1>Quem está entrando?</h1>
+          <p class="muted">Escolha seu bonequinho. Depois, é só colocar a senha.</p>
+          <div class="profile-picker" role="list" aria-label="Perfis disponíveis">
+            <button class="login-profile adriel-profile" type="button" data-login-profile="adriel" role="listitem">
+              <img src="assets/avatar-adriel.webp" alt="Avatar do Adriel" />
+              <strong>Adriel</strong>
+              <span>Nível 24</span>
+            </button>
+            <button class="login-profile maria-profile" type="button" data-login-profile="maria" role="listitem">
+              <img src="assets/avatar-maria.webp" alt="Avatar da Maria" />
+              <strong>Maria</strong>
+              <span>Nível 25</span>
+            </button>
+          </div>
+          <p class="tiny-note">Somente os dois perfis do casal aparecem aqui.</p>
         </div>
-        <h1>Nosso universo começa aqui</h1>
-        <p class="muted">Entre com sua conta. Cada celular terá seu próprio perfil.</p>
-        <form id="authForm">
-          <label>Nome <input id="authName" autocomplete="name" placeholder="Seu nome" /></label>
-          <label>E-mail <input id="authEmail" type="email" autocomplete="email" required placeholder="voce@email.com" /></label>
-          <label>Senha <input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo 6 caracteres" /></label>
-          <button class="primary-button" type="submit" id="authSubmit">Entrar</button>
-        </form>
-        <button class="text-button" id="authToggle" type="button">Ainda não tenho conta</button>
+
+        <div id="profileLoginPanel" class="profile-login-panel hidden">
+          <button id="backToProfiles" class="back-profile-button" type="button" aria-label="Voltar para os perfis">← Trocar perfil</button>
+          <div class="selected-profile">
+            <img id="selectedProfileAvatar" src="assets/avatar-adriel.webp" alt="" />
+            <div><small>Entrando como</small><strong id="selectedProfileName">Adriel</strong></div>
+          </div>
+          <form id="authForm">
+            <label id="authEmailLabel">E-mail
+              <input id="authEmail" type="email" autocomplete="email" placeholder="seu@email.com" />
+              <small id="emailHelp">Necessário apenas no primeiro acesso deste aparelho.</small>
+            </label>
+            <label>Senha
+              <input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Sua senha" />
+            </label>
+            <button class="primary-button" type="submit" id="authSubmit">Entrar como Adriel</button>
+          </form>
+          <button class="text-button hidden" id="firstAccessBtn" type="button">Primeiro acesso da Maria</button>
+          <p id="authStatus" class="status-text"></p>
+        </div>
+
         <button class="demo-button" id="demoMode" type="button">Abrir demonstração local</button>
-        <p id="authStatus" class="status-text"></p>
       </div>
     </section>
 
@@ -54,8 +78,8 @@
             <strong>Criar nosso espaço</strong>
             <span>Gera um código exclusivo</span>
           </button>
-          <div class="join-card">
-            <img src="assets/icon-envelope.webp" alt="" />
+          <div class="join-card" id="joinCoupleCard">
+            <img src="assets/proposal/envelope.webp" alt="Envelope com coração" />
             <strong>Entrar com código</strong>
             <input id="joinCode" maxlength="12" placeholder="LOVE-8421" />
             <button class="primary-button" id="joinCoupleBtn">Conectar</button>
