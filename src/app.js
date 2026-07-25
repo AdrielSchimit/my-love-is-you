@@ -301,10 +301,19 @@ function renderPet() {
 
 function setPage(page) {
   currentPage = page;
+  document.body.dataset.activePage = page;
   $$('.page').forEach(section => section.classList.toggle('active', section.dataset.page === page));
   $$('.nav-item').forEach(button => button.classList.toggle('active', button.dataset.pageTarget === page));
   document.body.classList.toggle('proposal-mode', page === 'proposal');
-  if (page === 'proposal') resetProposal();
+  if (page === 'proposal') {
+    if (window.MyLoveProposalLock?.isLocked?.()) {
+      showProposalStep('proposalAcceptedStep');
+      window.MyLoveProposalLock.showFinal?.();
+    }
+    else {
+      resetProposal();
+    }
+  }
   if (page === 'messages') nanaSay('messages');
   if (page === 'memories') nanaSay('memories');
   if (page === 'us') nanaSay('romantic');
@@ -319,7 +328,14 @@ function showProposalStep(stepId) {
 
 function resetProposal() {
   proposalNoAttempts = 0;
-  showProposalStep(localStorage.getItem('myLoveProposalAcceptedAt') ? 'proposalAcceptedStep' : 'proposalLetterStep');
+  showProposalStep(
+    (
+      window.MyLoveProposalLock?.isLocked?.()
+      || localStorage.getItem('myLoveProposalAcceptedAt')
+    )
+      ? 'proposalAcceptedStep'
+      : 'proposalLetterStep'
+  );
   const noButton = $('#proposalNoBtn');
   if (noButton) {
     noButton.style.left = '';
@@ -356,6 +372,8 @@ async function acceptProposal() {
       new Date().toISOString()
     );
   }
+
+  await window.MyLoveProposalLock?.markAccepted?.();
 
   proposalHearts(70);
   confetti(45);

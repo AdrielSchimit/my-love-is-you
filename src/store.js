@@ -202,7 +202,13 @@ export class LoveStore {
     this.state.capsules = capsules.data || [];
     this.state.rewards = rewards.data || defaultRewards;
     this.state.redemptions = redemptions.data || [];
-    if (settings.data) this.state.settings = { nextMeeting: settings.data.next_meeting || '', theme: settings.data.theme || 'sakura', distanceKm: settings.data.distance_km || 125 };
+    if (settings.data) {
+      this.state.settings = {
+        ...this.state.settings,
+        nextMeeting: settings.data.next_meeting || '',
+        distanceKm: settings.data.distance_km || 125
+      };
+    }
     this.persistLocal();
   }
 

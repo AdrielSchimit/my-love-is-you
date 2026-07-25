@@ -1,0 +1,473 @@
+/* =========================================================
+   V19 — CHAT, PEDIDO COMPARTILHADO E TRILHA SONORA
+   ========================================================= */
+
+/* Nana não ocupa mais o campo de envio. */
+.nana-chat-chip {
+  display: none;
+}
+
+body[data-active-page="messages"] .nana-widget {
+  display: none !important;
+}
+
+body[data-active-page="messages"] .nana-chat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: max-content;
+  margin-top: 8px;
+  padding: 4px 9px 4px 5px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      white 30%
+    );
+  border-radius: 999px;
+  color: var(--anime-ink, #563d54);
+  background:
+    linear-gradient(
+      145deg,
+      var(--anime-card, #fff8f5),
+      var(--anime-card-2, #ffe6ef)
+    );
+  box-shadow: 0 6px 13px rgba(35, 14, 39, .16);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.nana-chat-chip img {
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+}
+
+/* Pedido finalizado: o presente continua sendo uma lembrança,
+   mas não reinicia a experiência. */
+#giftBtn.proposal-complete {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      white 45%
+    ) !important;
+}
+
+#giftBtn.proposal-complete::after {
+  content: '✓';
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  background: #65ad58;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.proposal-accepted-date {
+  display: block;
+  max-width: 430px;
+  margin: 4px auto 18px;
+  color: #f7dce9;
+  font-weight: 850;
+  text-align: center;
+}
+
+/* Voltar e título deixam de disputar o mesmo espaço. */
+@media (max-width: 620px) {
+  .proposal-scene {
+    padding-top: 122px !important;
+  }
+
+  .proposal-back {
+    top: max(12px, env(safe-area-inset-top)) !important;
+    left: 12px !important;
+  }
+
+  .proposal-kicker {
+    top:
+      calc(
+        max(12px, env(safe-area-inset-top))
+        + 51px
+      ) !important;
+    left: 50% !important;
+    right: auto !important;
+    max-width: calc(100vw - 28px);
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* Controle compacto de música. */
+.profile-music-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      transparent 52%
+    );
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--anime-card, #fff8f5),
+        white 12%
+      ),
+      color-mix(
+        in srgb,
+        var(--anime-card-2, #ffe5ef),
+        var(--anime-accent, #ef5d91) 7%
+      )
+    );
+}
+
+.profile-music-control div {
+  display: grid;
+  gap: 3px;
+}
+
+.profile-music-control strong {
+  color: var(--anime-ink, #50364e);
+  font-size: 13px;
+}
+
+.profile-music-control small {
+  color: var(--anime-muted, #765e75);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.profile-music-control button {
+  padding-inline: 11px;
+  white-space: nowrap;
+}
+
+.love-music-bar {
+  position: fixed;
+  left: max(10px, env(safe-area-inset-left));
+  bottom:
+    calc(
+      var(--mobile-dock-height, 82px)
+      + 15px
+      + env(safe-area-inset-bottom)
+    );
+  z-index: 68;
+  width: min(190px, calc(100vw - 160px));
+  min-height: 49px;
+  display: grid;
+  grid-template-columns: 43px 1fr;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px 5px 5px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      white 30%
+    );
+  border-radius: 999px;
+  color: var(--anime-ink, #51384e);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--anime-card, #fff8f5),
+        white 10%
+      ),
+      color-mix(
+        in srgb,
+        var(--anime-card-2, #ffe6ef),
+        white 4%
+      )
+    );
+  box-shadow:
+    0 11px 26px rgba(35, 13, 42, .24),
+    inset 0 0 0 1px rgba(255,255,255,.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.love-music-play {
+  width: 39px;
+  height: 39px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background:
+    linear-gradient(
+      145deg,
+      var(--anime-accent-2, #c995e3),
+      var(--anime-accent, #ef5d91)
+    );
+  box-shadow: 0 5px 12px rgba(69, 26, 68, .22);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.love-music-description {
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+.love-music-description small {
+  color: var(--anime-muted, #765e75);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.love-music-description strong {
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body[data-active-page="messages"] .love-music-bar {
+  top: max(9px, env(safe-area-inset-top));
+  right: 9px;
+  bottom: auto;
+  left: auto;
+  width: 132px;
+  min-height: 43px;
+  grid-template-columns: 35px 1fr;
+}
+
+body[data-active-page="messages"] .love-music-play {
+  width: 33px;
+  height: 33px;
+}
+
+body.proposal-mode .love-music-bar,
+body.proposal-mode .love-music-player-panel {
+  display: none !important;
+}
+
+.love-music-player-panel {
+  position: fixed;
+  left: 50%;
+  bottom:
+    calc(
+      var(--mobile-dock-height, 82px)
+      + 72px
+      + env(safe-area-inset-bottom)
+    );
+  z-index: 190;
+  width: 244px;
+  padding: 11px;
+  border: 2px solid
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      white 30%
+    );
+  border-radius: 22px;
+  color: var(--anime-ink, #4f354d);
+  background:
+    radial-gradient(
+      circle at 50% 0,
+      var(--anime-glow, rgba(239,93,145,.2)),
+      transparent 38%
+    ),
+    linear-gradient(
+      155deg,
+      var(--anime-card, #fff8f5),
+      var(--anime-card-2, #ffe6ef)
+    );
+  box-shadow: 0 24px 60px rgba(15, 5, 24, .46);
+  opacity: 0;
+  transform: translate(-50%, 15px) scale(.94);
+  transition:
+    opacity .25s ease,
+    transform .28s ease;
+}
+
+.love-music-player-panel.open {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.love-music-player-panel > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.love-music-player-panel > header div {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.love-music-player-panel > header small {
+  color: var(--anime-muted, #765e75);
+  font-size: 9px;
+}
+
+.love-music-player-panel > header strong {
+  overflow: hidden;
+  max-width: 180px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#closeMusicPlayerPanel {
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--anime-ink, #4f354d);
+  background: rgba(255,255,255,.58);
+  font-size: 21px;
+}
+
+#loveMusicYoutubePlayer,
+#loveMusicYoutubePlayer iframe {
+  display: block;
+  width: 220px !important;
+  height: 220px !important;
+  border: 0;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.love-music-panel-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.music-manager-dialog {
+  width: min(520px, calc(100vw - 18px));
+  max-width: 520px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.music-manager-dialog::backdrop {
+  background: rgba(13, 4, 20, .72);
+  backdrop-filter: blur(8px);
+}
+
+.music-manager-card {
+  width: 100%;
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  color: var(--anime-ink, #4d354a);
+  border: 2px solid var(--anime-border, #efb7cc);
+  background:
+    radial-gradient(
+      circle at 50% 0,
+      var(--anime-glow, rgba(239,93,145,.2)),
+      transparent 36%
+    ),
+    linear-gradient(
+      155deg,
+      var(--anime-card, #fff8f5),
+      var(--anime-card-2, #ffe6ef)
+    );
+}
+
+.music-manager-card > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.music-manager-card > header h2 {
+  margin: 2px 0 0;
+}
+
+.music-manager-card > header small {
+  color: var(--anime-muted, #765e75);
+}
+
+.music-manager-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.add-music-section {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--anime-accent, #ef5d91),
+      transparent 52%
+    );
+  border-radius: 16px;
+  background: rgba(255,255,255,.34);
+}
+
+.add-music-section h3 {
+  margin: 0;
+}
+
+.music-manager-note {
+  margin: 0;
+  color: var(--anime-muted, #765e75);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+@media (min-width: 621px) {
+  .love-music-bar {
+    left:
+      calc(
+        50%
+        - min(255px, 50vw)
+        + 18px
+      );
+    bottom: 28px;
+  }
+
+  .love-music-player-panel {
+    bottom: 92px;
+  }
+}
+
+@media (max-width: 390px) {
+  .love-music-bar {
+    width: 142px;
+    grid-template-columns: 39px 1fr;
+  }
+
+  .love-music-description strong {
+    font-size: 9px;
+  }
+
+  .music-manager-actions {
+    grid-template-columns: 1fr;
+  }
+}
