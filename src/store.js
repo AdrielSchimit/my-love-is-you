@@ -380,7 +380,17 @@ export class LoveStore {
     this.persistLocal();
   }
 
-  async giveLove() { this.state.progress.affinity = Math.min(100, this.state.progress.affinity + 1); this.state.progress.xp += 5; this.persistLocal(); }
+  async giveLove() { 
+    this.state.progress.affinity = Math.min(100, this.state.progress.affinity + 1); 
+    this.state.progress.xp += 5; 
+    if (this.supabase && this.state.couple) {
+      await this.supabase.from('couple_progress').update({
+        affinity: this.state.progress.affinity,
+        xp: this.state.progress.xp
+      }).eq('couple_id', this.state.couple.id);
+    }
+    this.persistLocal(); 
+  }
 }
 
 function fileToDataUrl(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); }); }
