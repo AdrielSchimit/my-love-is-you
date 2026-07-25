@@ -517,3 +517,42 @@
     font-size: 10px;
   }
 }
+/* ===== HOTFIX: BALÃƒO DO NANA VISÃVEL NO MOBILE =====
+   O styles.css antigo usa .nana-bubble { display:none!important; }.
+   Esta regra Ã© mais especÃ­fica, carrega depois e preserva a animaÃ§Ã£o
+   controlada pela classe .show.
+*/
+
+@media (max-width: 620px) {
+  .nana-widget .nana-bubble {
+    display: block !important;
+    position: absolute !important;
+    right: 70px !important;
+    bottom: 58px !important;
+    z-index: 6 !important;
+    width: max-content !important;
+    max-width: min(230px, 64vw) !important;
+    pointer-events: none !important;
+  }
+
+  .nana-widget .nana-bubble:not(.show) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translate(10px, 7px) scale(.88) !important;
+  }
+
+  .nana-widget .nana-bubble.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(0, 0) scale(1) !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .nana-widget .nana-bubble {
+    right: 62px !important;
+    bottom: 55px !important;
+    max-width: min(205px, 62vw) !important;
+    font-size: 10.5px !important;
+  }
+}
