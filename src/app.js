@@ -3,6 +3,7 @@ import { nanaSpeak, contextualEntry } from './nana.js';
 
 const config = window.__MYLOVE_CONFIG__ || {};
 const store = new LoveStore(config);
+window.__MYLOVE_STORE__ = store;
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const fmt = new Intl.NumberFormat('pt-BR');

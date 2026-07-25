@@ -1,0 +1,519 @@
+/* Ajustes finais: Nana flutuante, missões, metas e chat de teste. */
+
+.nana-widget {
+  width: 100px;
+  min-height: 118px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  isolation: isolate;
+  display: grid;
+  place-items: end center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nana-widget .nana-bubble {
+  position: absolute;
+  right: 78px;
+  bottom: 62px;
+  z-index: 4;
+  width: max-content;
+  max-width: min(245px, 67vw);
+  padding: 11px 14px;
+  border: 2px solid color-mix(in srgb, var(--anime-accent, #ef5d91), white 30%);
+  border-radius: 18px 18px 5px 18px;
+  color: var(--anime-ink, #4c304d);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--anime-card, #fff8f5), white 12%),
+      color-mix(in srgb, var(--anime-card-2, #ffe5ef), white 7%)
+    );
+  box-shadow:
+    0 13px 30px rgba(24, 8, 32, .28),
+    inset 0 0 0 1px rgba(255, 255, 255, .62);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(12px, 7px) scale(.88);
+  transform-origin: right bottom;
+  transition:
+    opacity .24s ease,
+    visibility .24s ease,
+    transform .3s cubic-bezier(.2, .88, .25, 1.12);
+}
+
+.nana-widget .nana-bubble::after {
+  content: '';
+  position: absolute;
+  right: -9px;
+  bottom: 13px;
+  width: 17px;
+  height: 17px;
+  border-right: 2px solid color-mix(in srgb, var(--anime-accent, #ef5d91), white 30%);
+  border-bottom: 2px solid color-mix(in srgb, var(--anime-accent, #ef5d91), white 30%);
+  background: color-mix(in srgb, var(--anime-card-2, #ffe5ef), white 7%);
+  transform: rotate(-45deg);
+}
+
+.nana-widget .nana-bubble.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0) scale(1);
+}
+
+.nana-widget .nana-label {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+}
+
+.plan-plus-button,
+.compact-card-heading button,
+.goals-board-heading button {
+  border: 1px solid color-mix(in srgb, var(--anime-accent, #ef5d91), white 30%);
+  color: white;
+  background:
+    linear-gradient(
+      145deg,
+      var(--anime-accent-2, #c8a6df),
+      var(--anime-accent, #ef5d91)
+    );
+  box-shadow: 0 5px 12px rgba(39, 15, 48, .18);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.plan-plus-button,
+.compact-card-heading button {
+  width: 29px;
+  height: 29px;
+  padding: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.mission-title-row {
+  flex-wrap: wrap;
+}
+
+.mission-title-row .plan-plus-button {
+  margin-left: auto;
+}
+
+.mission-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.mission-owner {
+  width: max-content;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: #67455f;
+  background: rgba(255,255,255,.58);
+  border: 1px solid rgba(172, 105, 146, .22);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.mission-owner-adriel {
+  color: #4c7432;
+  border-color: rgba(102, 158, 58, .35);
+  background: rgba(206, 239, 177, .72);
+}
+
+.mission-owner-maria {
+  color: #a23d68;
+  border-color: rgba(218, 92, 148, .3);
+  background: rgba(255, 208, 228, .75);
+}
+
+.custom-mission {
+  border-left: 3px solid var(--anime-accent, #ef5d91);
+  padding-left: 7px;
+}
+
+.mission-locked {
+  opacity: .68;
+}
+
+.mission-locked input {
+  cursor: not-allowed;
+}
+
+.compact-card-heading,
+.goals-board-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+}
+
+.compact-card-heading h3,
+.goals-board-heading h2 {
+  margin: 0;
+}
+
+.goals-summary {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.compact-empty {
+  font-size: 11px;
+  margin: 5px 0;
+}
+
+.goals-board {
+  margin: 12px 0;
+  padding: 15px;
+}
+
+.goals-board-heading {
+  margin-bottom: 13px;
+}
+
+.goals-board-heading small {
+  color: var(--anime-muted, #7a607a);
+  font-weight: 750;
+}
+
+.goals-board-heading button {
+  padding: 8px 11px;
+  border-radius: 12px;
+}
+
+#goalsBoard {
+  display: grid;
+  gap: 8px;
+}
+
+.personal-goal {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid color-mix(in srgb, var(--anime-accent, #ef5d91), transparent 58%);
+  color: var(--anime-ink, #443047);
+  background: rgba(255, 255, 255, .48);
+}
+
+.personal-goal.compact {
+  grid-template-columns: 24px 1fr;
+  padding: 6px;
+  border-radius: 11px;
+  font-size: 10px;
+}
+
+.personal-goal.completed {
+  opacity: .62;
+}
+
+.personal-goal.completed > div > span {
+  text-decoration: line-through;
+}
+
+.goal-check {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--anime-accent, #ef5d91), white 25%);
+  color: white;
+  background:
+    linear-gradient(
+      145deg,
+      var(--anime-accent-2, #c8a6df),
+      var(--anime-accent, #ef5d91)
+    );
+  font-weight: 950;
+}
+
+.personal-goal.compact .goal-check {
+  width: 23px;
+  height: 23px;
+  border-radius: 7px;
+  font-size: 10px;
+}
+
+.goal-check:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.goal-metadata {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.goal-metadata em {
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+  color: #67455f;
+  background: rgba(255,255,255,.65);
+}
+
+.goal-metadata .owner-adriel {
+  color: #486c31;
+  background: rgba(210, 238, 183, .78);
+}
+
+.goal-metadata .owner-maria {
+  color: #a13e68;
+  background: rgba(255, 210, 229, .8);
+}
+
+.goal-metadata small {
+  color: var(--anime-muted, #775f76);
+  font-size: 9px;
+}
+
+.messages-header-tools {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.message-test-controls {
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+}
+
+.realtime-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #dfffe6;
+  background: rgba(15, 65, 43, .66);
+  border: 1px solid rgba(125, 239, 171, .45);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.realtime-pill i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6effa2;
+  box-shadow: 0 0 9px #6effa2;
+}
+
+#clearMessagesBtn {
+  padding: 6px 9px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 192, 215, .55);
+  color: white;
+  background: rgba(104, 28, 68, .72);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.plans-dialog {
+  width: min(520px, calc(100vw - 18px));
+  max-width: 520px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.plans-dialog::backdrop {
+  background: rgba(13, 4, 20, .7);
+  backdrop-filter: blur(7px);
+}
+
+.plans-modal-card {
+  width: 100%;
+  max-height: min(820px, calc(100dvh - 24px));
+  padding: 17px;
+  overflow-y: auto;
+  color: var(--anime-ink, #483149);
+  border: 2px solid var(--anime-border, #efb7cc);
+  border-radius: 25px;
+  background:
+    radial-gradient(
+      circle at 50% 0,
+      var(--anime-glow, rgba(239,93,145,.2)),
+      transparent 34%
+    ),
+    linear-gradient(
+      155deg,
+      var(--anime-card, #fff8f5),
+      var(--anime-card-2, #ffe7ef)
+    );
+  box-shadow: 0 25px 70px rgba(14, 4, 25, .55);
+}
+
+.plans-modal-card > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.plans-modal-card > header h2 {
+  margin: 2px 0 0;
+}
+
+.plans-modal-card > header small {
+  color: var(--anime-muted, #735a73);
+  font-weight: 800;
+}
+
+#closePlansModal {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--anime-ink, #483149);
+  background: rgba(255,255,255,.6);
+  font-size: 25px;
+}
+
+.planner-section {
+  margin-top: 14px;
+  padding: 13px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--anime-accent, #ef5d91), transparent 58%);
+  background: rgba(255,255,255,.38);
+}
+
+.planner-section h3 {
+  margin: 0 0 10px;
+}
+
+.planner-form {
+  display: grid;
+  gap: 10px;
+}
+
+.planner-form label {
+  display: grid;
+  gap: 5px;
+  color: var(--anime-ink, #49334a);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.planner-form input,
+.planner-form select {
+  width: 100%;
+  min-height: 43px;
+  padding: 10px 11px;
+  border: 1px solid color-mix(in srgb, var(--anime-accent, #ef5d91), transparent 52%);
+  border-radius: 12px;
+  outline: none;
+  color: #38223d;
+  background: rgba(255, 252, 253, .92);
+}
+
+.planner-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.planner-existing h4 {
+  margin: 12px 0 6px;
+}
+
+.planner-existing-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 9px;
+  align-items: center;
+  padding: 9px;
+  margin-bottom: 7px;
+  border-radius: 13px;
+  border: 1px solid rgba(170, 106, 145, .22);
+  background: rgba(255,255,255,.48);
+}
+
+.planner-existing-item div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.planner-existing-item strong {
+  overflow-wrap: anywhere;
+}
+
+.planner-existing-item small {
+  color: var(--anime-muted, #765e75);
+  font-size: 10px;
+}
+
+.planner-existing-item.completed strong {
+  text-decoration: line-through;
+}
+
+.planner-existing-item > button {
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 10px;
+  color: #9d315a;
+  background: #ffe1eb;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.planner-existing-item > button:disabled {
+  opacity: .4;
+}
+
+@media (max-width: 620px) {
+  .nana-widget .nana-bubble {
+    right: 66px;
+    bottom: 57px;
+    max-width: min(220px, 66vw);
+    font-size: 11px;
+  }
+
+  .messages-header-tools {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .message-test-controls {
+    justify-items: start;
+  }
+
+  .planner-two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .goals-board-heading {
+    align-items: flex-start;
+  }
+
+  .goals-board-heading button {
+    font-size: 10px;
+  }
+}
