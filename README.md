@@ -71,3 +71,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\PUBLICAR_GITHUB.ps1
 ```
 
 Destino: `https://github.com/AdrielSchimit/my-love-is-you.git`.
+
+## Surpresa especial — pedido de namoro
+
+O botão de presente no topo da Home abre uma experiência especial em quatro etapas:
+
+1. carta romântica;
+2. player oficial de `Young and Beautiful` por incorporação do YouTube;
+3. Nana entrega a aliança com a frase “O Adriel que mandou te entregar isso aqui!!”;
+4. pergunta “Quer namorar comigo?”, resposta e celebração.
+
+Ao tocar em **SIM**, o aceite é salvo no aparelho. Quando o casal estiver conectado ao Supabase, o app também tenta registrar uma mensagem e uma memória compartilhada.
+
+A música não é armazenada no projeto. O player abre a publicação oficial por streaming, após interação da usuária, respeitando bloqueios de autoplay do navegador.

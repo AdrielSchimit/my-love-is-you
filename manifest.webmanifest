@@ -3,7 +3,7 @@
   "short_name": "My Love",
   "description": "Universo compartilhado de Adriel e Maria.",
   "start_url": "/",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#25142f",
   "theme_color": "#25142f",
   "icons": [

@@ -9,6 +9,8 @@ const fmt = new Intl.NumberFormat('pt-BR');
 let authMode = 'signin';
 let currentPage = 'home';
 let lastNana = contextualEntry();
+let proposalNoAttempts = 0;
+const proposalTrackUrl = 'https://www.youtube-nocookie.com/embed/Te11UaHOHMQ?autoplay=1&playsinline=1&rel=0';
 
 const moods = [
   { key: 'happy', emoji: '😊', label: 'Feliz' },
@@ -233,10 +235,67 @@ function setPage(page) {
   currentPage = page;
   $$('.page').forEach(section => section.classList.toggle('active', section.dataset.page === page));
   $$('.nav-item').forEach(button => button.classList.toggle('active', button.dataset.pageTarget === page));
+  document.body.classList.toggle('proposal-mode', page === 'proposal');
+  if (page === 'proposal') resetProposal();
   if (page === 'messages') nanaSay('messages');
   if (page === 'memories') nanaSay('memories');
   if (page === 'us') nanaSay('romantic');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+function showProposalStep(stepId) {
+  $$('.proposal-step').forEach(step => step.classList.toggle('active', step.id === stepId));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetProposal() {
+  proposalNoAttempts = 0;
+  showProposalStep(localStorage.getItem('myLoveProposalAcceptedAt') ? 'proposalAcceptedStep' : 'proposalLetterStep');
+  const noButton = $('#proposalNoBtn');
+  if (noButton) {
+    noButton.style.left = '';
+    noButton.style.top = '';
+    noButton.style.right = '5%';
+    noButton.style.bottom = '16px';
+    noButton.style.transform = '';
+  }
+}
+
+function proposalHearts(count = 42) {
+  for (let i = 0; i < count; i++) {
+    const heart = document.createElement('span');
+    heart.className = 'proposal-heart-float';
+    heart.textContent = Math.random() > .25 ? '♥' : '✦';
+    heart.style.left = `${Math.random() * 100}%`;
+    heart.style.bottom = `${-10 - Math.random() * 20}px`;
+    heart.style.fontSize = `${14 + Math.random() * 26}px`;
+    heart.style.animationDelay = `${Math.random() * .8}s`;
+    heart.style.color = ['#ff79aa','#ffd0e0','#ffd77d','#d9a8ff'][Math.floor(Math.random()*4)];
+    document.body.append(heart);
+    setTimeout(() => heart.remove(), 3400);
+  }
+}
+
+async function acceptProposal() {
+  localStorage.setItem('myLoveProposalAcceptedAt', new Date().toISOString());
+  proposalHearts(70);
+  confetti(45);
+  showProposalStep('proposalAcceptedStep');
+  toast('Nova fase desbloqueada: namoro ♥', 4200);
+
+  try {
+    if (store.state.user && store.state.couple) {
+      await store.sendMessage('💍 SIM! A surpresa foi aceita. Adriel e Maria desbloquearam uma nova fase da história! ♥');
+      await store.addMemory({
+        title: 'O nosso SIM 💍',
+        content: 'O dia em que uma pergunta especial virou uma nova fase da nossa história.'
+      });
+      render();
+    }
+  } catch (error) {
+    console.warn('A resposta foi salva localmente, mas não foi possível sincronizar agora:', error);
+  }
 }
 
 function resetCanvas() {
@@ -288,6 +347,39 @@ function bindEvents() {
   $('#joinCoupleBtn').addEventListener('click', async () => { try { await store.joinCouple($('#joinCode').value); routeFromState(); toast('Corações conectados.'); confetti(30); } catch (error) { $('#onboardingStatus').textContent = error.message; } });
   $('#onboardingLogout').addEventListener('click', () => store.signOut());
   $$('.nav-item').forEach(button => button.addEventListener('click', () => setPage(button.dataset.pageTarget)));
+  $('#proposalBackBtn').addEventListener('click', () => setPage('home'));
+  $('#proposalContinueBtn').addEventListener('click', () => { showProposalStep('proposalNanaStep'); proposalHearts(16); });
+  $('#proposalReceiveBtn').addEventListener('click', () => { showProposalStep('proposalQuestionStep'); proposalHearts(24); });
+  $('#proposalYesBtn').addEventListener('click', acceptProposal);
+  $('#proposalFinishBtn').addEventListener('click', () => setPage('home'));
+  $('#proposalNoBtn').addEventListener('click', event => {
+    proposalNoAttempts += 1;
+    const button = event.currentTarget;
+    const area = button.closest('.proposal-choice-area');
+    const maxX = Math.max(0, area.clientWidth - button.offsetWidth - 8);
+    const maxY = Math.max(0, area.clientHeight - button.offsetHeight - 8);
+    button.style.right = 'auto';
+    button.style.bottom = 'auto';
+    button.style.left = `${Math.random() * maxX}px`;
+    button.style.top = `${Math.random() * maxY}px`;
+    button.style.transform = `rotate(${Math.random() * 14 - 7}deg)`;
+    if (proposalNoAttempts < 3) toast(['Tem certeza? O Nana já trouxe a caixinha.','Essa opção parece estar com problemas logísticos.'][proposalNoAttempts - 1], 2200);
+    else toast('Você pode pensar no seu tempo. O SIM vai continuar aqui, sem pressão. ♥', 3600);
+  });
+  $('#proposalMusicBtn').addEventListener('click', () => {
+    const wrap = $('#proposalYoutubeWrap');
+    if (!wrap.querySelector('iframe')) {
+      const frame = document.createElement('iframe');
+      frame.src = proposalTrackUrl;
+      frame.title = 'Young and Beautiful — Lana Del Rey';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      wrap.append(frame);
+    }
+    wrap.hidden = false;
+    $('#proposalMusicBtn').textContent = '♫';
+    toast('Música aberta no player oficial.');
+  });
   $('#loveBtn').addEventListener('click', async () => { await store.giveLove(); confetti(12); toast('+5 XP de carinho ♥'); nanaSay('romantic'); render(); });
   $('#heartScore').addEventListener('click', () => { toast(`Afinidade do casal: ${store.state.progress.affinity}%`); nanaSay('xp'); });
   $('#mapCard').addEventListener('click', event => { if (!event.target.closest('button')) nanaSay('map', {}, true); });
@@ -312,7 +404,7 @@ function bindEvents() {
   $('#saveCapsuleBtn').addEventListener('click', async () => { const content = $('#capsuleContent').value.trim(), date = $('#capsuleDate').value; if (!content || !date) return toast('Escreva a mensagem e escolha a data.'); await store.addCapsule(content, date); $('#capsuleContent').value = ''; renderCapsules(); toast('Cápsula selada.'); });
   $('#copyInviteBtn').addEventListener('click', async () => { const code = store.state.inviteCode; await navigator.clipboard.writeText(`Entre no My love is You com o código ${code}`); toast('Convite copiado.'); });
   $('#notificationBtn').addEventListener('click', async () => { if (!('Notification' in window)) return toast('Este navegador não suporta notificações.'); const permission = await Notification.requestPermission(); toast(permission === 'granted' ? 'Notificações ativadas.' : 'Permissão não concedida.'); });
-  $('#giftBtn').addEventListener('click', () => { store.state.progress.coins += 10; store.persistLocal(); confetti(24); toast('Recompensa diária: +10 moedas 💎'); nanaSay('streak'); render(); });
+  $('#giftBtn').addEventListener('click', () => setPage('proposal'));
   $('#logoutBtn').addEventListener('click', async () => { await store.signOut(); routeFromState(); });
 }
 

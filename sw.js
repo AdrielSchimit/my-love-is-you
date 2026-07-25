@@ -1,5 +1,5 @@
-const CACHE = 'my-love-is-you-v2';
-const CORE = ['/', '/index.html', '/styles.css', '/config.js', '/src/app.js', '/src/nana.js', '/src/store.js', '/assets/logo.webp', '/assets/heart-main.webp', '/assets/avatar-adriel.webp', '/assets/avatar-maria.webp', '/assets/pet-cat.webp'];
+const CACHE = 'my-love-is-you-v3-proposal';
+const CORE = ['/', '/index.html', '/styles.css', '/config.js', '/src/app.js', '/src/nana.js', '/src/store.js', '/assets/logo.webp', '/assets/heart-main.webp', '/assets/avatar-adriel.webp', '/assets/avatar-maria.webp', '/assets/pet-cat.webp', '/assets/proposal/banner.webp', '/assets/proposal/sim-heart.webp', '/assets/proposal/nana-ring.webp', '/assets/proposal/ring-box.webp'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {
