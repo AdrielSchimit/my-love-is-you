@@ -10,3 +10,23 @@ window.__MYLOVE_CONFIG__ = {
     maria: { name: 'Maria', email: '', avatar: 'assets/avatar-maria.webp', level: 25 }
   }
 };
+
+// my-love-animations-loader
+(() => {
+  if (!document.querySelector('link[data-my-love-animations]')) {
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = '/animations.css?v=1';
+    style.dataset.myLoveAnimations = 'true';
+    document.head.appendChild(style);
+  }
+
+  if (!document.querySelector('script[data-my-love-animations]')) {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = '/src/animations.js?v=1';
+    script.async = false;
+    script.dataset.myLoveAnimations = 'true';
+    document.head.appendChild(script);
+  }
+})();

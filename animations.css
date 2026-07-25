@@ -1,0 +1,208 @@
+/* My love is You — motor visual animado dos chibis */
+.animations-ready .person-avatar,
+.animations-ready .login-profile img,
+.animations-ready .map-person img,
+.animations-ready #petBtn > img,
+.animations-ready .pet-big,
+.animations-ready .nana-widget img,
+.animations-ready .nana-modal-card > img,
+.animations-ready .proposal-nana,
+.animations-ready .proposal-ring-box {
+  transform-origin: 50% 100%;
+  will-change: transform, opacity, filter;
+}
+
+.animations-ready .person-avatar {
+  animation: coupleIdle 3.4s ease-in-out infinite;
+}
+.animations-ready .person.maria .person-avatar { animation-delay: -1.7s; }
+.animations-ready .login-profile:nth-child(2) img { animation-delay: -1.2s; }
+
+.animations-ready .map-person.origin img { animation: mapChibiFloat 2.8s ease-in-out infinite; }
+.animations-ready .map-person.destination img { animation: mapChibiFloat 2.8s ease-in-out -1.4s infinite; }
+
+.animations-ready #petBtn > img,
+.animations-ready .pet-big {
+  animation: petIdle 2.6s ease-in-out infinite;
+}
+
+.nana-widget img,
+.nana-modal-card > img {
+  animation: nanaIdle 2.9s ease-in-out infinite;
+}
+
+.nana-widget.is-talking img,
+.nana-modal-card.is-talking > img {
+  animation: nanaTalking 160ms ease-in-out infinite alternate;
+}
+
+.nana-widget.is-reacting img,
+.nana-modal-card.is-reacting > img {
+  animation: nanaReaction .85s cubic-bezier(.2,.86,.25,1) both;
+}
+
+.nana-widget.is-blinking img,
+.nana-modal-card.is-blinking > img {
+  animation: nanaBlink .19s ease both;
+}
+
+.nana-bubble.is-speaking,
+.nana-modal-card blockquote.is-speaking {
+  animation: speechBubblePulse .52s ease-in-out infinite alternate;
+}
+
+.couple-celebrate {
+  animation: coupleCelebrate 1.05s cubic-bezier(.16,.9,.24,1.15) both !important;
+}
+
+.pet-react {
+  animation: petReact .9s cubic-bezier(.18,.85,.24,1.2) both !important;
+}
+
+.proposal-nana.nana-proposal-enter {
+  animation:
+    nanaProposalEntrance .9s cubic-bezier(.16,.85,.2,1.05) both,
+    nanaProposalIdle 2.4s ease-in-out .9s infinite !important;
+}
+
+.proposal-nana-dialogue.dialogue-pop {
+  animation: dialoguePop .55s cubic-bezier(.16,.9,.22,1.1) both;
+}
+
+.proposal-ring-box.ring-box-reveal {
+  animation:
+    ringReveal .72s cubic-bezier(.16,.92,.2,1.18) both,
+    ringGlow 1.4s ease-in-out .72s infinite alternate;
+}
+
+.proposal-nana.nana-accepted-celebrate {
+  animation: nanaAccepted 1.25s cubic-bezier(.18,.88,.22,1.1) both !important;
+}
+
+.actor-heart {
+  --heart-x: 0px;
+  --heart-delay: 0ms;
+  --heart-size: 18px;
+  position: fixed;
+  z-index: 250;
+  pointer-events: none;
+  color: #ff79aa;
+  font-size: var(--heart-size);
+  text-shadow: 0 2px 9px rgba(255,255,255,.9), 0 5px 15px rgba(198,55,113,.35);
+  animation: actorHeartFly 1.25s cubic-bezier(.18,.72,.25,1) var(--heart-delay) both;
+}
+
+@keyframes coupleIdle {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.012); }
+}
+
+@keyframes mapChibiFloat {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
+
+@keyframes petIdle {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.02,.985); }
+}
+
+@keyframes nanaIdle {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.015,.99); }
+}
+
+@keyframes nanaTalking {
+  from { transform: translateY(0) rotate(-1deg) scale(1); }
+  to { transform: translateY(-3px) rotate(1deg) scale(1.025); }
+}
+
+@keyframes nanaReaction {
+  0% { transform: translateY(0) scale(1) rotate(0); }
+  35% { transform: translateY(-12px) scale(1.1) rotate(-3deg); }
+  65% { transform: translateY(-5px) scale(1.04) rotate(2deg); }
+  100% { transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes nanaBlink {
+  0%,100% { transform: scaleY(1); }
+  50% { transform: scaleY(.97) translateY(1px); }
+}
+
+@keyframes speechBubblePulse {
+  from { transform: translateY(0) scale(1); filter: brightness(1); }
+  to { transform: translateY(-1px) scale(1.015); filter: brightness(1.04); }
+}
+
+@keyframes coupleCelebrate {
+  0% { transform: translateY(0) scale(1) rotate(0); }
+  25% { transform: translateY(-14px) scale(1.08) rotate(-3deg); }
+  50% { transform: translateY(-8px) scale(1.1) rotate(3deg); }
+  75% { transform: translateY(-12px) scale(1.06) rotate(-2deg); }
+  100% { transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes petReact {
+  0% { transform: translateY(0) scale(1); }
+  35% { transform: translateY(-18px) scale(1.08,.94); }
+  58% { transform: translateY(2px) scale(.96,1.08); }
+  78% { transform: translateY(-7px) scale(1.03,.98); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes nanaProposalEntrance {
+  0% { opacity: 0; transform: translateX(55vw) translateY(18px) scale(.72) rotate(6deg); }
+  65% { opacity: 1; transform: translateX(-12px) translateY(-5px) scale(1.04) rotate(-1deg); }
+  100% { opacity: 1; transform: translateX(0) translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes nanaProposalIdle {
+  0%,100% { transform: translateY(0) rotate(-.5deg); }
+  50% { transform: translateY(-7px) rotate(.8deg); }
+}
+
+@keyframes dialoguePop {
+  0% { opacity: 0; transform: translateY(18px) scale(.84); }
+  72% { opacity: 1; transform: translateY(-3px) scale(1.035); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ringReveal {
+  0% { opacity: 0; transform: translateY(28px) scale(.35) rotate(-10deg); }
+  70% { opacity: 1; transform: translateY(-6px) scale(1.12) rotate(3deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes ringGlow {
+  from { filter: drop-shadow(0 10px 14px rgba(22,4,31,.28)) brightness(1); }
+  to { filter: drop-shadow(0 0 24px rgba(255,211,89,.92)) brightness(1.16); }
+}
+
+@keyframes nanaAccepted {
+  0% { opacity: 0; transform: translateY(30px) scale(.65) rotate(-5deg); }
+  45% { opacity: 1; transform: translateY(-16px) scale(1.12) rotate(4deg); }
+  72% { transform: translateY(-4px) scale(1.04) rotate(-2deg); }
+  100% { transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes actorHeartFly {
+  0% { opacity: 0; transform: translate(0,0) scale(.4) rotate(0); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--heart-x),-95px) scale(1.45) rotate(20deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animations-ready .person-avatar,
+  .animations-ready .login-profile img,
+  .animations-ready .map-person img,
+  .animations-ready #petBtn > img,
+  .animations-ready .pet-big,
+  .animations-ready .nana-widget img,
+  .animations-ready .nana-modal-card > img,
+  .animations-ready .proposal-nana,
+  .animations-ready .proposal-ring-box,
+  .actor-heart {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
